@@ -4,7 +4,12 @@ import datetime
 import csv
 from requests import get, Response
 from .models import ConsumoDev, Precio_kw, Consumo, Vecino
+from django.shortcuts import render
 
+
+
+def index(request):
+    return render(request, "index.html")
 
 def load_vecinos(request):
     return HttpResponse("")

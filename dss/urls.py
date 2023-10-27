@@ -23,5 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('load_data/', load_data),
     path('load_vecinos/', load_vecinos),
-    path('', load_precios),
+    path('', index),
 ]
