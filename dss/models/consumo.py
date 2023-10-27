@@ -7,3 +7,6 @@ class Consumo(models.Model):
     fecha = models.DateField()
     hora = models.TimeField()
     duracion_m = models.IntegerField()
+
+    def __str__(self) -> str:
+        return f"{self.vecino.nombre} | {self.fecha} {self.hora} | {self.kw_media_consumidos}"
