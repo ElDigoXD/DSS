@@ -3,13 +3,32 @@ from django.http import HttpResponse
 import datetime
 import csv
 from requests import get, Response
-from .models import ConsumoDev, Precio_kw, Consumo, Vecino
+from .models import ConsumoDev, Precio_kw, Consumo, Vecino, Produccion
 from django.shortcuts import render
-
+from django.http import Http404
 
 
 def index(request):
-    return render(request, "index.html")
+    vecinos = Vecino.objects.all()
+    return render(request, "index.html", {'vecinos': vecinos})
+
+
+def info_vecino(request):
+    vecino_id = request.GET.get('vecino_id')
+
+    try:
+        # Intenta obtener el objeto Vecino correspondiente al vecino_id
+        vecino = Vecino.objects.get(id=vecino_id)
+
+        # Filtra los objetos Consumo y Produccion relacionados con el vecino
+        consumo_vecino = Consumo.objects.filter(vecino=vecino)
+        produccion_vecino = Produccion.objects.filter(vecino=vecino)
+
+        return render(request, "datos.html", {'vecino': vecino, 'consumo_vecino': consumo_vecino, 'produccion_vecino': produccion_vecino})
+    except Vecino.DoesNotExist:
+        raise Http404("Vecino no encontrado")
+
+
 
 def load_vecinos(request):
     return HttpResponse("")
