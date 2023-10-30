@@ -28,10 +28,24 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
     consumo_vecino = Consumo.objects.filter(vecino=vecino)
     produccion_vecino = Produccion.objects.filter()
 
+    consumo = consumo_vecino.filter(fecha=datetime.date(2023, 1, 3)).all()
+    produccion = Produccion.objects.filter(
+        fecha=datetime.date(2016, 3, 27)
+        ).all()
+    precio = Precio_kw.objects.filter(fecha=datetime.date(2023,10,27)).all()
+
+    context = {
+        "vecino": vecino,
+        "consumo": str([h.kw_media_consumidos for h in consumo]),
+        "labels": str([i for i in range(24)]),
+        "produccion": str([h.kw_media_producidos for h in produccion]),
+        "precio": str([h.precio for h in precio])
+    }
+
     return render(
         request,
         "datos.html",
-        {"vecino": vecino, "consumo_vecino": consumo_vecino, "produccion_vecino": None},
+        context=context
     )
 
 
