@@ -10,24 +10,28 @@ from django.http import Http404
 
 def index(request):
     vecinos = Vecino.objects.all()
-    return render(request, "index.html", {'vecinos': vecinos})
+    return render(request, "index.html", {"vecinos": vecinos})
 
 
 def info_vecino(request):
-    vecino_id = request.GET.get('vecino_id')
+    vecino_id = request.GET.get("vecino_id")
 
-    try:
-        # Intenta obtener el objeto Vecino correspondiente al vecino_id
-        vecino = Vecino.objects.get(id=vecino_id)
-
-        # Filtra los objetos Consumo y Produccion relacionados con el vecino
-        consumo_vecino = Consumo.objects.filter(vecino=vecino)
-        produccion_vecino = Produccion.objects.filter(vecino=vecino)
-
-        return render(request, "datos.html", {'vecino': vecino, 'consumo_vecino': consumo_vecino, 'produccion_vecino': produccion_vecino})
-    except Vecino.DoesNotExist:
+    # Intenta obtener el objeto Vecino correspondiente al vecino_id
+    if (not isinstance(vecino_id, int)
+        or not (
+            vecino := Vecino.objects.get_or_create(id=vecino_id, defaults=None)[0]
+    )):
         raise Http404("Vecino no encontrado")
 
+    # Filtra los objetos Consumo y Produccion relacionados con el vecino
+    consumo_vecino = Consumo.objects.filter(vecino=vecino)
+    produccion_vecino = Produccion.objects.filter()
+
+    return render(
+        request,
+        "datos.html",
+        {"vecino": vecino, "consumo_vecino": consumo_vecino, "produccion_vecino": None},
+    )
 
 
 def load_vecinos(request):
