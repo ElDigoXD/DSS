@@ -22,9 +22,9 @@ def info_vecino(request):
 
         # Filtra los objetos Consumo y Produccion relacionados con el vecino
         consumo_vecino = Consumo.objects.filter(vecino=vecino)
-        produccion_vecino = Produccion.objects.filter(vecino=vecino)
+        produccion_vecino = Produccion.objects.filter()
 
-        return render(request, "datos.html", {'vecino': vecino, 'consumo_vecino': consumo_vecino, 'produccion_vecino': produccion_vecino})
+        return render(request, "datos.html", {'vecino': vecino, 'consumo_vecino': consumo_vecino, 'produccion_vecino': None})
     except Vecino.DoesNotExist:
         raise Http404("Vecino no encontrado")
 
