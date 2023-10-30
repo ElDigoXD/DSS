@@ -1,5 +1,6 @@
 import json
-from django.http import HttpResponse
+from typing import Any
+from django.http import HttpRequest, HttpResponse
 import datetime
 import csv
 from requests import get, Response
@@ -8,12 +9,12 @@ from django.shortcuts import render
 from django.http import Http404
 
 
-def index(request):
+def index(request: HttpRequest) -> HttpResponse:
     vecinos = Vecino.objects.all()
     return render(request, "index.html", {"vecinos": vecinos})
 
 
-def info_vecino(request):
+def info_vecino(request: HttpRequest) -> HttpResponse:
     vecino_id = request.GET.get("vecino_id")
 
     # Intenta obtener el objeto Vecino correspondiente al vecino_id
@@ -34,7 +35,7 @@ def info_vecino(request):
     )
 
 
-def load_vecinos(request):
+def load_vecinos(request: HttpRequest) -> HttpResponse:
     return HttpResponse("")
     result = ConsumoDev.objects.filter(
         fecha__gte=datetime.date(2010, 10, 1), fecha__lt=datetime.date(2010, 11, 1)
@@ -53,10 +54,10 @@ def load_vecinos(request):
     )
 
 
-def load_precios(request):
+def load_precios(request: HttpRequest) -> HttpResponse:
     res: Response = get("https://api.preciodelaluz.org/v1/prices/all?zone=PCB")
     print(res.text)
-    a: dict = json.loads(res.text)
+    a: dict[str, dict[str, Any]] = json.loads(res.text)
 
     a2 = Precio_kw.objects.filter(
         fecha=datetime.datetime.strptime(a["00-01"]["date"], "%d-%m-%Y")
@@ -80,19 +81,13 @@ def load_precios(request):
     return HttpResponse(f"<html> {a} <html>")
 
 
-def load_data(request):
-    now = datetime.datetime.now()
-    html = "<html><body>It is now %s.</body></html>" % now
-
-    # por cada vecino
-    # añadir consumo relativo a su porcentaje
-    # 1 mes
+def load_data(request: HttpRequest) -> HttpResponse:
 
     res = get("https://api.preciodelaluz.org/v1/prices/all?zone=PCB")
     print(res.text)
 
     # stext = [x for ]
-    return HttpResponse(f"<html> {text} <html>")
+    return HttpResponse(f"<html> {res.text} <html>")
     with open("datos consumo.csv") as csvfile:
         reader = csv.reader(csvfile, delimiter=";")
         for i, (date, time, consumo) in enumerate(reader):
