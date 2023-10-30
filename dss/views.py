@@ -17,9 +17,9 @@ def info_vecino(request):
     vecino_id = request.GET.get("vecino_id")
 
     # Intenta obtener el objeto Vecino correspondiente al vecino_id
-    if (not isinstance(vecino_id, int)
+    if (not (vecino_id and vecino_id.isnumeric())
         or not (
-            vecino := Vecino.objects.get_or_create(id=vecino_id, defaults=None)[0]
+            vecino := Vecino.objects.get_or_create(id=int(vecino_id), defaults=None)[0]
     )):
         raise Http404("Vecino no encontrado")
 
