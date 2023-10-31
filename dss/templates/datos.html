@@ -1,84 +1,128 @@
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Datos del vecino</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-  
-  </head>
-  <body>
-    <h1 class="display-2">Datos de {{ vecino.nombre }}</h1>
-    <canvas id="graficoConsumo" style="width:100%;max-width:700px"></canvas>
-    <canvas id="graficoPrecio" style="width:100%;max-width:700px"></canvas>
-    <script>
-      function a() {
-          let xValues = {{ labels }};
-          let yValues = {{ consumo }};
-          let zValues = {{ produccion }};
-          let chart = new Chart("graficoConsumo", {
-              type: "line",
-              data: {
-                  labels: xValues,
-                  datasets: [
-                  {
-                      backgroundColor: "rgba(0,0,255,0.5)",
-                      borderColor: "rgba(0,0,255,0.1)",
-                      data: yValues
-                  },
-                  {
-                    backgroundColor: "rgba(0,255,0,0.5)",
-                    borderColor: "rgba(0,255,0,0.1)",
-                    data: zValues
-                }
-                ]
-                  
-              },
-              options: {
-                  legend: { display: false },
-                  // scales: {
-                  //     yAxes: [{ ticks: { min: 0, max: 16 } }],
-                  // }
-              }
-          })
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Datos de {{ vecino.nombre }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+</head>
+
+<body>
+  <h1 class="display-2"
+    style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; text-align: center;">Datos de {{
+    vecino.nombre }}</h1>
+  <h3 class="display-6" style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">Gráfica de
+    producción y consumo</h3>
+  <canvas id="graficoConsumo" style="width:100%;max-width:700px; margin: 10px;"></canvas>
+  <h3 class="display-6" style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">Gráfica del
+    precio del <strong>KWh</strong></h3>
+  <canvas id="graficoPrecio" style="width:100%;max-width:700px; margin: 10px;"></canvas>
+  <h3 class="display-6" style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">Gráfica de
+    ganancia de energía</h3>
+  <canvas id="graficoBarrasRestante" style="width:100%;max-width:700px; margin: 10px;"></canvas>
+  <script>
+    function a() {
+      let xValues = {{ labels }
+    };
+    let yValues = {{ consumo }};
+    let zValues = {{ produccion }};
+    let chart = new Chart("graficoConsumo", {
+      type: "line",
+      data: {
+        labels: xValues,
+        datasets: [
+          {
+            backgroundColor: "rgba(0,0,255,0.5)",
+            borderColor: "rgba(0,0,255,0.1)",
+            data: yValues
+          },
+          {
+            backgroundColor: "rgba(0,255,0,0.5)",
+            borderColor: "rgba(0,255,0,0.1)",
+            data: zValues
+          }
+        ]
+
+      },
+      options: {
+        legend: { display: false },
+        // scales: {
+        //     yAxes: [{ ticks: { min: 0, max: 16 } }],
+        // }
       }
-      a()
-    </script>
-    <script>
-      function a() {
-          let xValues = {{ labels }};
-          let yValues = {{ precio }};
-          let zValues = {{ precio }};
-          let chart = new Chart("graficoPrecio", {
-              type: "line",
-              data: {
-                  labels: xValues,
-                  datasets: [
-                  {
-                      backgroundColor: "rgba(0,0,255,0.5)",
-                      borderColor: "rgba(0,0,255,0.1)",
-                      data: yValues
-                  },
-                  {
-                    backgroundColor: "rgba(0,255,0,0.5)",
-                    borderColor: "rgba(0,255,0,0.1)",
-                    data: zValues
-                }
-                ]
-                  
-              },
-              options: {
-                  legend: { display: false },
-                  scales: {
-                      yAxes: [{ ticks: { min: 0 } }],
-                  }
-              }
-          })
+    })
       }
-      a()
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    
-  </body>
+    a()
+  </script>
+  <script>
+    function a() {
+      let xValues = {{ labels }
+    };
+    let yValues = {{ precio }};
+    let zValues = {{ precio }};
+    let chart = new Chart("graficoPrecio", {
+      type: "line",
+      data: {
+        labels: xValues,
+        datasets: [
+          {
+            backgroundColor: "rgba(0,0,255,0.5)",
+            borderColor: "rgba(0,0,255,0.1)",
+            data: yValues
+          },
+          {
+            backgroundColor: "rgba(0,255,0,0.5)",
+            borderColor: "rgba(0,255,0,0.1)",
+            data: zValues
+          }
+        ]
+
+      },
+      options: {
+        legend: { display: false },
+        scales: {
+          yAxes: [{ ticks: { min: 0 } }],
+        }
+      }
+    })
+      }
+    a()
+  </script>
+  <script>
+    function a() {
+      let xValues = {{ labels }
+    };
+    let yValues = {{ ganancia }};
+    let chart = new Chart("graficoBarrasRestante", {
+      type: "bar",
+      data: {
+        labels: xValues,
+        datasets: [
+          {
+            backgroundColor: "rgba(0,0,255,0.5)",
+            borderColor: "rgba(0,0,255,0.1)",
+            data: yValues
+          }
+        ]
+
+      },
+      options: {
+        legend: { display: false },
+        //scales: {
+        //yAxes: [{ ticks: { min: 0 } }],
+        //}
+      }
+    })
+      }
+    a()
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+</body>
+
 </html>
