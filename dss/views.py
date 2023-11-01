@@ -4,6 +4,8 @@ from django.http import HttpRequest, HttpResponse
 import datetime
 import csv
 from requests import get, Response
+
+from dss.chart import *
 from .models import ConsumoDev, Precio_kw, Consumo, Vecino, Produccion
 from django.shortcuts import render
 from django.http import Http404
@@ -43,7 +45,54 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
         "labels": str([i for i in range(24)]),
         "produccion": str([h.kw_media_producidos for h in produccion]),
         "precio": str([h.precio for h in precio]),
-        "ganancia": str([g for g in listaGanancia]) 
+        "ganancia": str([g for g in listaGanancia]),
+        "charts": [
+            # Chart(
+            #     canvas_id="test",
+            #     x_labels="[1,2,3,4]",
+            #     datasets=[Dataset("[3,2,1,4]"), Dataset("[2,2,2,3]", "y2")],
+            #     scales=[Scale("y", "left"), Scale("y2", "right", "")]
+            # ),
+            Chart(
+                canvas_id="prod_y_consumo_chart",
+                x_labels=str([i for i in range(24)]),
+                datasets=[
+                    Dataset(str([h.kw_media_consumidos for h in consumo])),
+                    Dataset(
+                        data=str([h.kw_media_producidos for h in produccion]),
+                        background_color="rgba(0,255,0,0.5)",
+                        border_color="rgba(0,255,0,0.1)"
+                    )
+                ],
+                scales=[Scale()]
+            ),
+            Chart(
+                canvas_id="precio",
+                x_labels=str([i for i in range(24)]),
+                datasets=[
+                    Dataset(
+                        data=str([h.precio for h in precio]),
+                        background_color="rgba(0,255,255,0.5)",
+                        border_color="rgba(0,255,255,0.1)"
+                    )
+                ],
+                scales=[Scale()],
+            ),
+            Chart(
+                type=Type.BAR,
+                canvas_id="ganancia",
+                x_labels=str([i for i in range(24)]),
+                datasets=[
+                    Dataset(str([g for g in listaGanancia])),
+                    Dataset(
+                        data=str(
+                            [precio[i].precio * listaGanancia[i]/1000 for i in range(24)]),
+                        y_axis_id="y2",
+                        background_color="rgba(255,0,0,0.5)")
+                ],
+                scales=[Scale("y", "left"), Scale("y2", "right")]
+            )
+        ]
     }
 
     return render(
