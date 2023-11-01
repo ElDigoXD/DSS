@@ -31,13 +31,12 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
     consumo = consumo_vecino.filter(fecha=datetime.date(2023, 1, 3)).all()
     produccion = Produccion.objects.filter(
         fecha=datetime.date(2016, 3, 26)
-        ).all()
-    precio = Precio_kw.objects.filter(fecha=datetime.date(2023,10,27)).all()
-    
-    listaGanancia = []
-    for i in range(24):
-        listaGanancia.append(produccion[i].kw_media_producidos - consumo[i].kw_media_consumidos)
-    
+    ).all()
+    precio = Precio_kw.objects.filter(fecha=datetime.date(2023, 10, 27)).all()
+
+    listaGanancia = [produccion[i].kw_media_producidos - consumo[i].kw_media_consumidos
+                     for i in range(24)]
+
     context = {
         "vecino": vecino,
         "consumo": str([h.kw_media_consumidos for h in consumo]),
