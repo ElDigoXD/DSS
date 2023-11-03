@@ -19,6 +19,7 @@ def index(request: HttpRequest) -> HttpResponse:
 
 def info_vecino(request: HttpRequest) -> HttpResponse:
     vecino_id = request.GET.get("vecino_id")
+    fecha = request.GET.get("fecha")
 
     # Intenta obtener el objeto Vecino correspondiente al vecino_id
     if (not (vecino_id and vecino_id.isnumeric())
