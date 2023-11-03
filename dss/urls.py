@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('load_data/', load_data),
     path('load_vecinos/', load_vecinos),
+    path('test/', test),
     path('', index, name='seleccionar_vecino'),
     path('datos/', info_vecino, name='datos_vecino'),
 ]

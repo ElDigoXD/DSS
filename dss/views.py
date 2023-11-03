@@ -1,11 +1,12 @@
 import json
 from typing import Any
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 import datetime
 import csv
 from requests import get, Response
 
 from dss.chart import *
+from dss.models.precio_venta import Precio_venta
 from .models import ConsumoDev, Precio_kw, Consumo, Vecino, Produccion
 from django.shortcuts import render
 from django.http import Http404
@@ -34,7 +35,7 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
     produccion = Produccion.objects.filter(
         fecha=datetime.date(2016, 3, 26)
     ).all()
-    precio = Precio_kw.objects.filter(fecha=datetime.date(2023, 10, 27)).all()
+    precio = Precio_venta.objects.filter(fecha=datetime.date(2023, 1, 3)).all()
 
     listaGanancia = [produccion[i].kw_media_producidos - consumo[i].kw_media_consumidos
                      for i in range(24)]
@@ -171,3 +172,30 @@ def load_data(request: HttpRequest) -> HttpResponse:
             )
 
     return HttpResponse(html)
+
+def test(request: HttpRequest)-> HttpResponse:
+    res = get("https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real?start_date=2023-01-01T00:00&end_date=2023-01-31T23:59&time_trunc=hour")
+    
+    values = json.loads(res.text)["included"][0]["attributes"]["values"]
+    for value in values:
+        new = Precio_venta.objects.get_or_create(
+            fecha=datetime.datetime.fromisoformat(value["datetime"]),
+            hora=datetime.datetime.fromisoformat(value["datetime"]),
+            defaults={
+                "precio": value["value"]/1000,
+                "duracion_m": 60,
+            }
+        )
+        print(new)
+
+    print(values)
+    return HttpResponse()
+
+    # new = Precio_kw.objects.create(
+    #     precio=2,
+    #     fecha=datetime.datetime.fromisoformat(),
+    #     hora=,
+    #     duracion_m=60,
+    # )
+
+    return JsonResponse(json.loads(res.text))
