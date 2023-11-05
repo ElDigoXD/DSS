@@ -1,30 +1,64 @@
 
 
-from datetime import date
+from datetime import date, datetime
+from typing import Tuple
 
 from django.http import Http404, HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from dss import utils
 from dss.chart import Chart, Dataset, Scale, Type
 from dss.models import Consumo, Precio_venta, Produccion, Vecino
 
 
+def vecino_fecha_GET(vecino_id_str: str | None, fecha_str: str | None) -> Tuple[Vecino | None, datetime | None]:
+    vecino = None
+    fecha = None
+
+    if fecha_str:
+        if not (fecha := utils.try_strptime(fecha_str, "%Y-%m-%d")):
+            return (None, None)
+
+    if vecino_id_str:
+        vecino_id = utils.try_int(vecino_id_str)
+        vecino = Vecino.objects.filter(id=vecino_id).first()
+
+    return (vecino, fecha)
+
+
 def info_vecino(request: HttpRequest) -> HttpResponse:
-    vecino_id = request.GET.get("vecino_id")
-    fecha = request.GET.get("fecha")
+    # Si la petición contiene algún parametro get
+    vecino_id_str = request.GET.get("vecino_id")
+    fecha_str = request.GET.get("fecha")
 
-    if not (fecha
-            and (fecha := utils.try_strptime(fecha, "%Y-%m-%d"))):
+    if vecino_id_str or fecha_str:
+        vecino, fecha = vecino_fecha_GET(vecino_id_str, fecha_str)
 
-        raise Http404("Fecha invalida")
+        if not fecha:
+            raise Http404("Fecha invalida")
+        if not vecino:
+            raise Http404("Vecino no encontrado")
 
-    # Intenta obtener el objeto Vecino correspondiente al vecino_id
-    if not (vecino_id
-            and (vecino_id := utils.try_int(vecino_id))
-            and (vecino := Vecino.objects.filter(id=vecino_id).first())):
+        # Guarda los parametros en la sesión, así podremos 
+        # navegar a páginas sin tener que pasar parámetros en la url
+        request.session["vecino_id"] = vecino.pk
+        request.session["fecha"] = datetime.strftime(fecha, "%Y-%m-%d")
+        
+        # Descomentar para "limpiar" los parametros de la url, 
+        # si cambiamos de GET a POST no debería hacer falta
+        #return redirect("datos_vecino")
+        
+    else:
+        vecino_id = request.session.get("vecino_id")
+        fecha_str = request.session.get("fecha")
+        print(request.session.__dict__)
+        if not (vecino_id and fecha_str):
+            # Redirecciona a la página de seleccionar el vecino para
+            # poder realizar la primera consulta get.
+            return redirect("seleccionar_vecino")
 
-        raise Http404("Vecino no encontrado")
+        fecha = datetime.strptime(fecha_str, "%Y-%m-%d")
+        vecino = Vecino.objects.filter(id=vecino_id).first()
 
     # Filtra los objetos Consumo y Produccion relacionados con el vecino
     consumo_vecino = Consumo.objects.filter(vecino=vecino)
@@ -36,7 +70,7 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
     if len(produccion) != 24 or len(consumo) != 24:
         raise Http404(f"Error: len(produccion): {len(produccion)} or len(consumo): {len(consumo)}")
         raise Http404(f"La fecha no está en el sistema")
-        
+
     listaGanancia = [produccion[i].kw_media_producidos - consumo[i].kw_media_consumidos for i in range(24)]
 
     context = {
