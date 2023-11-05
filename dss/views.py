@@ -1,15 +1,15 @@
-import json
-from typing import Any
-from django.http import HttpRequest, HttpResponse, JsonResponse
-import datetime
+
 import csv
-from requests import get, Response
+import json
+from datetime import date, datetime, time
+from typing import Any
+
+from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import render
+from requests import Response, get
 
 from dss.chart import *
-from dss.models.precio_venta import Precio_venta
-from .models import ConsumoDev, Precio_kw, Consumo, Vecino, Produccion
-from django.shortcuts import render
-from django.http import Http404
+from dss.models import Consumo, ConsumoDev, Precio_kw, Precio_venta, Produccion, Vecino
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -17,15 +17,14 @@ def index(request: HttpRequest) -> HttpResponse:
     return render(request, "index.html", {"vecinos": vecinos})
 
 
-def info_vecino(request: HttpRequest) -> HttpResponse: 
+def info_vecino(request: HttpRequest) -> HttpResponse:
     vecino_id = request.GET.get("vecino_id")
     fecha = request.GET.get("fecha")
-    
-    if(fecha == None):
+
+    if (fecha == None):
         raise Http404("Fecha invalida")
     else:
-        partes_fecha = fecha.split("-") 
-    
+        partes_fecha = fecha.split("-")
 
         # Intenta obtener el objeto Vecino correspondiente al vecino_id
         if (not (vecino_id and vecino_id.isnumeric())
@@ -38,12 +37,11 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
         consumo_vecino = Consumo.objects.filter(vecino=vecino)
         produccion_vecino = Produccion.objects.filter()
 
-        consumo = consumo_vecino.filter(fecha=datetime.date(int(partes_fecha[0]), int(partes_fecha[1]), int(partes_fecha[2]))).all()
-        produccion = Produccion.objects.filter(fecha=datetime.date(2016, 3, 26)).all()
-        precio = Precio_venta.objects.filter(fecha=datetime.date(int(partes_fecha[0]), int(partes_fecha[1]), int(partes_fecha[2]))).all()
+        consumo = consumo_vecino.filter(fecha=date(int(partes_fecha[0]), int(partes_fecha[1]), int(partes_fecha[2]))).all()
+        produccion = Produccion.objects.filter(fecha=date(2016, 3, 26)).all()
+        precio = Precio_venta.objects.filter(fecha=date(int(partes_fecha[0]), int(partes_fecha[1]), int(partes_fecha[2]))).all()
 
-        listaGanancia = [produccion[i].kw_media_producidos - consumo[i].kw_media_consumidos
-                        for i in range(24)]
+        listaGanancia = [produccion[i].kw_media_producidos - consumo[i].kw_media_consumidos for i in range(24)]
 
         context = {
             "vecino": vecino,
@@ -91,8 +89,7 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
                     datasets=[
                         Dataset(str([g for g in listaGanancia])),
                         Dataset(
-                            data=str(
-                                [precio[i].precio * listaGanancia[i]/1000 for i in range(24)]),
+                            data=str([precio[i].precio * listaGanancia[i]/1000 for i in range(24)]),
                             y_axis_id="y2",
                             background_color="rgba(255,0,0,0.5)")
                     ],
@@ -133,15 +130,15 @@ def load_precios(request: HttpRequest) -> HttpResponse:
     a: dict[str, dict[str, Any]] = json.loads(res.text)
 
     a2 = Precio_kw.objects.filter(
-        fecha=datetime.datetime.strptime(a["00-01"]["date"], "%d-%m-%Y")
+        fecha=datetime.strptime(a["00-01"]["date"], "%d-%m-%Y")
     )
     if len(a2) == 0:
         print("vacío")
         for h, datos in a.items():
             new = Precio_kw.objects.create(
                 precio=datos["price"] / 1000,
-                fecha=datetime.datetime.strptime(datos["date"], "%d-%m-%Y"),
-                hora=datetime.datetime.strptime(datos["hour"][:2], "%H"),
+                fecha=datetime.strptime(datos["date"], "%d-%m-%Y"),
+                hora=datetime.strptime(datos["hour"][:2], "%H"),
                 duracion_m=60,
             )
             new.save()
@@ -166,8 +163,8 @@ def load_data(request: HttpRequest) -> HttpResponse:
         for i, (date, time, consumo) in enumerate(reader):
             if i == 0:
                 continue
-            d = datetime.datetime.strptime(date, "%d/%m/%Y")
-            t = datetime.datetime.strptime(time, "%H:%M:%S")
+            d = datetime.strptime(date, "%d/%m/%Y")
+            t = datetime.strptime(time, "%H:%M:%S")
             # print(d, t, float(consumo.replace(",", ".")))
             new = ConsumoDev.objects.create(
                 kw_media_consumidos=float(consumo.replace(",", ".")),
@@ -178,14 +175,15 @@ def load_data(request: HttpRequest) -> HttpResponse:
 
     return HttpResponse(html)
 
-def test(request: HttpRequest)-> HttpResponse:
+
+def test(request: HttpRequest) -> HttpResponse:
     res = get("https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real?start_date=2023-01-01T00:00&end_date=2023-01-31T23:59&time_trunc=hour")
-    
+
     values = json.loads(res.text)["included"][0]["attributes"]["values"]
     for value in values:
         new = Precio_venta.objects.get_or_create(
-            fecha=datetime.datetime.fromisoformat(value["datetime"]),
-            hora=datetime.datetime.fromisoformat(value["datetime"]),
+            fecha=datetime.fromisoformat(value["datetime"]),
+            hora=datetime.fromisoformat(value["datetime"]),
             defaults={
                 "precio": value["value"]/1000,
                 "duracion_m": 60,
