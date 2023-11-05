@@ -1,143 +1,25 @@
-<!doctype html>
-<html lang="en" data-bs-theme="dark">
+{# prettier-ignore #}
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Datos de {{ vecino.nombre }}</title>
+{% block title %}
+  Datos de {{ vecino.nombre }}
+{% endblock %}
 
-    <!-- ChartJS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-    <!-- Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-            crossorigin="anonymous"></script>
-    {%comment%}
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.11.2/cdn/components/split-panel/split-panel.js"></script>
-    {%endcomment%}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-</head>
+{% block imports %}
+  <!-- ChartJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  {% comment %}
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.11.2/cdn/components/split-panel/split-panel.js"></script>
+  {% endcomment %}
+{% endblock %}
 
-<body>
-    <h1 class="display-2"
-        style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; text-align: center;">
-        Datos de {{ vecino.nombre }}
-    </h1>
+{% block body %}
+  <h1 class="display-2" style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; text-align: center;">Datos de {{ vecino.nombre }}</h1>
 
-    <h1>Gráficos</h1>  
+  <h1>Gráficos</h1>
 
-
-    {% for chart in charts %}
+  {% for chart in charts %}
     <h2>{{ chart.canvas_id }}</h2>
-    {% include 'chart.html' with chart=chart%}
-    {% endfor %}
-
-
-    {% comment  %}
-    <h1>Gráficos viejos</h1>    
-    <h2>Gráfica de producción y consumo</h2>
-    <canvas id="graficoConsumo" style="width:100%;max-width:700px; margin: 10px;"></canvas>
-
-    <h2>Gráfica del precio del KWh</h2>
-    <canvas id="graficoPrecio" style="width:100%;max-width:700px; margin: 10px;"></canvas>
-
-    <h2>Gráfica produccion sobrante</h2>
-    <canvas id="graficoBarrasRestante" style="width:100%;max-width:700px; margin: 10px;"></canvas>
-    <script>
-        (() => {
-            let xValues = {{ labels }};
-        let yValues = {{ consumo }};
-        let zValues = {{ produccion }};
-        let chart = new Chart("graficoConsumo", {
-
-            type: "line",
-            data: {
-                labels: xValues,
-                datasets: [
-                    {
-                        backgroundColor: "rgba(0,0,255,0.5)",
-                        borderColor: "rgba(0,0,255,0.1)",
-                        data: yValues
-                    },
-                    {
-                        backgroundColor: "rgba(0,255,0,0.5)",
-                        borderColor: "rgba(0,255,0,0.1)",
-                        data: zValues
-                    }
-                ]
-
-            },
-            options: {
-                legend: { display: false },
-                // scales: {
-                //     yAxes: [{ ticks: { min: 0, max: 16 } }],
-                // }
-            }
-        })
-    }) ()
-    </script>
-    <script>
-            (() => {
-                let xValues = {{ labels }};
-        let yValues = {{ precio }};
-        let zValues = {{ precio }};
-        let chart = new Chart("graficoPrecio", {
-            type: "line",
-            data: {
-                labels: xValues,
-                datasets: [
-                    {
-                        backgroundColor: "rgba(0,0,255,0.5)",
-                        borderColor: "rgba(0,0,255,0.1)",
-                        data: yValues
-                    },
-                    {
-                        backgroundColor: "rgba(0,255,0,0.5)",
-                        borderColor: "rgba(0,255,0,0.1)",
-                        data: zValues
-                    }
-                ]
-
-            },
-            options: {
-                legend: { display: false },
-                scales: {
-                    yAxes: [{ ticks: { min: 0 } }],
-                }
-            }
-        })
-    }) ()
-    </script>
-    <script>
-            (() => {
-                let xValues = {{ labels }};
-        let yValues = {{ ganancia }};
-        let chart = new Chart("graficoBarrasRestante", {
-            type: "bar",
-            data: {
-                labels: xValues,
-                datasets: [
-                    {
-                        backgroundColor: "rgba(0,0,255,0.5)",
-                        borderColor: "rgba(0,0,255,0.1)",
-                        data: yValues
-                    }
-                ]
-
-            },
-            options: {
-                legend: { display: false },
-                //scales: {
-                //yAxes: [{ ticks: { min: 0 } }],
-                //}
-            }
-        })
-    }) ()
-    </script>
-{% endcomment %}   
-
-
-</body>
-
-</html>
+    {% include 'chart.html' %} {% comment %}with var=val only{% endcomment %}
+  {% endfor %}
+{% endblock %}
