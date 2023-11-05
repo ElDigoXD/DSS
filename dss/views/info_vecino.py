@@ -33,7 +33,7 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
     produccion = Produccion.objects.filter(fecha=date(2016, 3, 26)).all()
     precio = Precio_venta.objects.filter(fecha=fecha.date()).all()
 
-    if len(produccion) or len(consumo) != 24:
+    if len(produccion) != 24 or len(consumo) != 24:
         raise Http404(f"Error: len(produccion): {len(produccion)} or len(consumo): {len(consumo)}")
         raise Http404(f"La fecha no está en el sistema")
         
