@@ -11,6 +11,8 @@ from dss.models import Consumo, ConsumoDev, Precio_kw, Precio_venta, Vecino
 
 from .info_vecino import info_vecino
 
+def bs_test(request: HttpRequest) -> HttpResponse:
+    return render(request, "bootstrap_test.html")
 
 def index(request: HttpRequest) -> HttpResponse:
     vecinos = Vecino.objects.all()

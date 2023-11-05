@@ -26,4 +26,5 @@ urlpatterns = [
     path('test/', test),
     path('', index, name='seleccionar_vecino'),
     path('datos/', info_vecino, name='datos_vecino'),
+    path('test', bs_test, name="test")
 ]

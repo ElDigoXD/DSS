@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Datos de {{ vecino.nombre }}
+{% endblock %}
+
+{% block imports %}
+  <!-- ChartJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+{% endblock %}
+
+{% block body %}
+  <nav class="navbar navbar-expand-sm bg-body-tertiary rounded mt-2">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'test' %}">Solar DSS</a>
+      <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"><span class="navbar-toggler-icon"></span></button>
+
+      <div class="navbar-collapse collapse" id="navbar">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Administrador</a>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" href="/">Pagina administrador</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/admin">Django admin</a>
+              </li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li>
+                <a class="dropdown-item" href="/test">Test</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled">Disabled</a>
+          </li>
+        </ul>
+        <form role="search">
+          <input class="form-control" type="search" placeholder="Search" />
+        </form>
+      </div>
+    </div>
+  </nav>
+{% endblock %}
