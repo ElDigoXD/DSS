@@ -59,12 +59,23 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
 
         fecha = datetime.strptime(fecha_str, "%Y-%m-%d")
         vecino = Vecino.objects.filter(id=vecino_id).first()
+        if not vecino:
+            raise(Http404)
 
     # Filtra los objetos Consumo y Produccion relacionados con el vecino
     consumo_vecino = Consumo.objects.filter(vecino=vecino)
+    consumo_total = Consumo.objects.filter(fecha=fecha.date()).all()
+    
+    consumo_agregado = [0.0] * 24
+
+    for i in range(24):
+        for h in consumo_total:
+            if h.hora.hour == i:
+                consumo_agregado[i] = consumo_agregado[i] + h.kw_media_consumidos
+                
 
     consumo = consumo_vecino.filter(fecha=fecha.date()).all()
-    produccion = Produccion.objects.filter(fecha=date(2016, 3, 26)).all()
+    produccion = Produccion.objects.filter(fecha=fecha.date()).all()
     precio = Precio_venta.objects.filter(fecha=fecha.date()).all()
 
     if len(produccion) != 24 or len(consumo) != 24:
@@ -93,7 +104,7 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
                 datasets=[
                     Dataset(str([h.kw_media_consumidos for h in consumo])),
                     Dataset(
-                        data=str([h.kw_media_producidos for h in produccion]),
+                        data=str([h.kw_media_producidos * vecino.porcentaje for h in produccion]),
                         background_color="rgba(0,255,0,0.5)",
                         border_color="rgba(0,255,0,0.1)"
                     )
@@ -124,6 +135,19 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
                         background_color="rgba(255,0,0,0.5)")
                 ],
                 scales=[Scale("y", "left"), Scale("y2", "right")]
+            ),
+            Chart(
+                canvas_id="Consumo Total",
+                x_labels=str([i for i in range(24)]),
+                datasets=[
+                    Dataset(str(consumo_agregado)),
+                    Dataset(
+                        data=str([h.kw_media_producidos for h in produccion]),
+                        background_color="rgba(0,255,0,0.5)",
+                        border_color="rgba(0,255,0,0.1)"
+                    )
+                ],
+                scales=[Scale()]
             )
         ]
     }
