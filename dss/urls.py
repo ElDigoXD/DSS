@@ -26,5 +26,8 @@ urlpatterns = [
     path('test/', test),
     path('', index, name='seleccionar_vecino'),
     path('datos/', info_vecino, name='datos_vecino'),
+    path('orientacion_placas/', orientacion_placas, name="orientacion_placas"),
+    path('aumento_participacion/', aumento_participacion, name="aumento_participacion"),
+    path('baterias/', baterias, name="baterias"),
     path('test', bs_test, name="test")
 ]

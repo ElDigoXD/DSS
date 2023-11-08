@@ -7,12 +7,25 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
 from requests import Response, get
 
-from dss.models import Consumo, ConsumoDev, Precio_kw, Precio_venta, Vecino
+from dss.models import Consumo, ConsumoDev, Precio_kw, Precio_venta, Vecino, Produccion
 
 from .info_vecino import info_vecino
+from .aumento_participacion import aumento_participacion
+from .baterias import baterias
+from .orientacion_placas import orientacion_placas
 
 def bs_test(request: HttpRequest) -> HttpResponse:
-    return render(request, "bootstrap_test.html")
+    return HttpResponse("")
+    result = Produccion.objects.filter(
+        fecha__gte=date(2023, 1, 1), fecha__lt=date(2023, 2, 1)
+    )
+    for r in result:
+        r.kw_media_producidos = r.kw_media_producidos / 10
+        r.save()
+    return HttpResponse(
+        f"<html><body>It is now {datetime.now()}.</body></html>"
+    )
+   
 
 def index(request: HttpRequest) -> HttpResponse:
     vecinos = Vecino.objects.all()
