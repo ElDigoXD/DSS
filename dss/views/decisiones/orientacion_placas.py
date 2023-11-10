@@ -3,4 +3,4 @@ from django.shortcuts import render
 
 
 def orientacion_placas(request: HttpRequest) -> HttpResponse:
-    return render(request, "orientacion_placas.html")
+    return render(request, "decisiones/orientacion_placas.html")

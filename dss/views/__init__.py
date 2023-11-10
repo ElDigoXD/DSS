@@ -10,9 +10,9 @@ from requests import Response, get
 from dss.models import Consumo, ConsumoDev, Precio_kw, Precio_venta, Vecino, Produccion
 
 from .info_vecino import info_vecino
-from .aumento_participacion import aumento_participacion
-from .baterias import baterias
-from .orientacion_placas import orientacion_placas
+from .decisiones.aumento_participacion import aumento_participacion
+from .decisiones.baterias import baterias
+from .decisiones.orientacion_placas import orientacion_placas
 
 def bs_test(request: HttpRequest) -> HttpResponse:
     return HttpResponse("")

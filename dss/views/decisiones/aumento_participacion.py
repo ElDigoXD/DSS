@@ -3,4 +3,4 @@ from django.shortcuts import render
 
 
 def aumento_participacion(request: HttpRequest) -> HttpResponse:
-    return render(request, "aumento_participacion.html")
+    return render(request, "decisiones/aumento_participacion.html")

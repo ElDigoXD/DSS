@@ -3,4 +3,4 @@ from django.shortcuts import render
 
 
 def baterias(request: HttpRequest) -> HttpResponse:
-    return render(request, "baterias.html")
+    return render(request, "decisiones/baterias.html")
