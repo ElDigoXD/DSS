@@ -12,7 +12,7 @@ from dss.models import Consumo, ConsumoDev, Precio_kw, Precio_venta, Vecino, Pro
 from .info_vecino import info_vecino
 from .decisiones.aumento_participacion import aumento_participacion
 from .decisiones.baterias import baterias
-from .decisiones.orientacion_placas import orientacion_placas
+from .decisiones.orientacion_placas import orientacion_placas, orientacion_placas_vecino
 
 def bs_test(request: HttpRequest) -> HttpResponse:
     return HttpResponse("")
