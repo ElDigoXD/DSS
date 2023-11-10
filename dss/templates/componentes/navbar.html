@@ -4,10 +4,10 @@
     <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"><span class="navbar-toggler-icon"></span></button>
 
     <div class="navbar-collapse collapse" id="navbar">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav me-auto">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Administrador</a>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu shadow">
             <li>
               <a class="dropdown-item" href="/">Pagina administrador</a>
             </li>
@@ -30,7 +30,7 @@
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Decisiones</a>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu shadow">
             <li>
               <a class="dropdown-item " href="{% url "orientacion_placas" %}">Orientación placas</a>
             </li>
@@ -43,6 +43,18 @@
           </ul>
         </li>
       </ul>
+      <div class="nav-item dropdown me-2">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="" alt="Pepe" width="32" height="32" class="rounded-circle">
+        </a>
+        <ul class="dropdown-menu shadow">
+          <li><a class="dropdown-item" href="#">Paco</a></li>
+          <li><a class="dropdown-item" href="#">Miguel</a></li>
+          <li><a class="dropdown-item" href="#">...</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+        </ul>
+      </div>
       <form role="search">
         <input class="form-control" type="search" placeholder="Search" />
       </form>
