@@ -22,57 +22,7 @@
 
   <body class="d-flex flex-column vh-100 m-0">
     {% block navBar %}
-      <nav class="navbar navbar-expand-sm bg-body-tertiary rounded m-2">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="/">Solar DSS</a>
-          <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"><span class="navbar-toggler-icon"></span></button>
-
-          <div class="navbar-collapse collapse" id="navbar">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Administrador</a>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a class="dropdown-item" href="/">Pagina administrador</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="/admin/login/?next=/admin/">Django admin</a>
-                  </li>
-                  <li>
-                    <hr class="dropdown-divider" />
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="/test">Test</a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/datos">Datos</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled">Disabled</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Decisiones</a>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a class="dropdown-item " href="{% url "orientacion_placas" %}">Orientación placas</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item " href="{% url "aumento_participacion" %}">Aumento participación</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item " href="{% url "baterias" %}">Instalación de baterías</a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-            <form role="search">
-              <input class="form-control" type="search" placeholder="Search" />
-            </form>
-          </div>
-        </div>
-      </nav>
+      {% include 'componentes/navbar.html' %}
     {% endblock %}
 
     <div class="container-fluid d-flex flex-column flex-fill">

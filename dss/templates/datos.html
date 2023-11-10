@@ -20,6 +20,6 @@
 
   {% for chart in charts %}
     <h2>{{ chart.canvas_id }}</h2>
-    {% include 'chart.html' %} {% comment %}with var=val only{% endcomment %}
+    {% include 'componentes/chart.html' %} {% comment %}with var=val only{% endcomment %}
   {% endfor %}
 {% endblock %}
