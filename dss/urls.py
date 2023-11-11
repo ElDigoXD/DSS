@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from dss.views.decisiones.aumento_participacion import aumento_participacion_vecino
+
 
 from .views import *
 
@@ -30,6 +32,7 @@ urlpatterns = [
     path('orientacion_placas/', orientacion_placas, name="orientacion_placas"),
     path('orientacion_placas/<int:vecino_id>', orientacion_placas_vecino, name="orientacion_placas"),
     path('aumento_participacion/', aumento_participacion, name="aumento_participacion"),
+    path('aumento_participacion/<int:vecino_id>', aumento_participacion_vecino, name="aumento_participacion"),
     path('baterias/', baterias, name="baterias"),
     path('test', bs_test, name="test")
 ]

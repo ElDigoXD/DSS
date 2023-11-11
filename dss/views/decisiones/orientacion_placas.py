@@ -21,6 +21,7 @@ def orientacion_placas(request: HttpRequest) -> HttpResponse:
 def orientacion_placas_vecino(request: HttpRequest, vecino_id) -> HttpResponse:
     if not vecino_id:
         vecino_id = request.session.get("vecino_id")
+
     vecino = Vecino.objects.filter(id=vecino_id).first()
     consumo_semana = Consumo.objects.filter(
         fecha__gte=date(2023,1,1), 
@@ -72,6 +73,6 @@ def orientacion_placas_vecino(request: HttpRequest, vecino_id) -> HttpResponse:
                 Dataset(str([p for p in produccion_tarde]), background_color="rgba(255,255,0,1)"),
             ],
             [Scale()]
-            )
+        )
     }
     return render(request, "decisiones/orientacion_placas.html", context=context)
