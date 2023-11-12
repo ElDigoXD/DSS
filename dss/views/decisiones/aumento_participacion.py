@@ -11,7 +11,8 @@ from dss.chart import *
 def aumento_participacion(request: HttpRequest) -> HttpResponse:
     return aumento_participacion_vecino(request, None)
 
-def aumento_participacion_vecino(request: HttpRequest, vecino_id) -> HttpResponse:
+
+def aumento_participacion_vecino(request: HttpRequest, vecino_id: int | None) -> HttpResponse:
     if not vecino_id:
         vecino_id = request.session.get("vecino_id")
 
@@ -19,9 +20,9 @@ def aumento_participacion_vecino(request: HttpRequest, vecino_id) -> HttpRespons
 
     porcentaje_actual = vecino.porcentaje
 
-    produccion_semana = Produccion.objects.filter( 
-        fecha__gte=date(2023,1,1), 
-        fecha__lte=date(2023,1,7),
+    produccion_semana = Produccion.objects.filter(
+        fecha__gte=date(2023, 1, 1),
+        fecha__lte=date(2023, 1, 7),
     ).all()
 
     produccion_semana_actual = [0.0]*24
@@ -38,7 +39,7 @@ def aumento_participacion_vecino(request: HttpRequest, vecino_id) -> HttpRespons
                 produccion_semana_aumento[i] = produccion_semana_aumento[i] + h.kw_media_producidos * porcentaje_aumento
 
     context = {
-        "vecino":vecino,
+        "vecino": vecino,
         "porcentaje_actual": porcentaje_actual*100,
         "porcentaje_aumento": porcentaje_aumento*100,
         "chart": Chart(

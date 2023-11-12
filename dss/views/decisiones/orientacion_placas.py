@@ -15,8 +15,10 @@ def calcular_diferencia(produccion, consumo):
     diferencia = diferencia / sum(consumo)
     return diferencia
 
+
 def orientacion_placas(request: HttpRequest) -> HttpResponse:
     return orientacion_placas_vecino(request, None)
+
 
 def orientacion_placas_vecino(request: HttpRequest, vecino_id) -> HttpResponse:
     if not vecino_id:
@@ -24,15 +26,15 @@ def orientacion_placas_vecino(request: HttpRequest, vecino_id) -> HttpResponse:
 
     vecino = Vecino.objects.filter(id=vecino_id).first()
     consumo_semana = Consumo.objects.filter(
-        fecha__gte=date(2023,1,1), 
-        fecha__lte=date(2023,1,7),
+        fecha__gte=date(2023, 1, 1),
+        fecha__lte=date(2023, 1, 7),
         vecino_id=vecino_id
-        ).all()
-    
-    produccion_semana = Produccion.objects.filter( 
-        fecha__gte=date(2023,1,1), 
-        fecha__lte=date(2023,1,7),
-        ).all()
+    ).all()
+
+    produccion_semana = Produccion.objects.filter(
+        fecha__gte=date(2023, 1, 1),
+        fecha__lte=date(2023, 1, 7),
+    ).all()
 
     consumo_agregado = [0.0]*24
     for i in range(24):
@@ -46,7 +48,6 @@ def orientacion_placas_vecino(request: HttpRequest, vecino_id) -> HttpResponse:
             if h.hora.hour == i:
                 produccion_agregada[i] = produccion_agregada[i] + h.kw_media_producidos * vecino.porcentaje
 
-    
     produccion_mañana = produccion_agregada.copy()
     produccion_mañana.pop(0)
     produccion_mañana.insert(23, 0)
@@ -64,7 +65,7 @@ def orientacion_placas_vecino(request: HttpRequest, vecino_id) -> HttpResponse:
     context = {
         "porcentajes": diferencias,
         "chart": Chart(
-            "a", 
+            "a",
             str([i for i in range(24)]),
             [
                 Dataset(str([c for c in consumo_agregado]), background_color="rgba(0,0,255,0.5)"),

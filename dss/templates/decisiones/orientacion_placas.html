@@ -19,14 +19,14 @@
         <div class="col-md-8">
           {% include 'componentes/chart.html' %}
         </div>
-        <div class="col-md-4 d-flex align-items-center ">
-          <div class= "flex-column ">
-            <h4>Porcentaje de la energía ahorrada:</h1>
-            • Neutral: {{porcentajes.0|floatformat:"1"}}% <br>
-            • Mañana: {{porcentajes.1|floatformat:"1"}}% <br>
-            • Tarde: {{porcentajes.2|floatformat:"1"}}% <br>
+        <div class="col-md-4 d-flex align-items-center">
+          <div class="flex-column">
+            <h4>Porcentaje de la energía ahorrada:</h4>
+            • Neutral: {{ porcentajes[0]|floatformat:'1' }}% <br />
+            • Mañana: {{ porcentajes[1]|floatformat:'1' }}% <br />
+            • Tarde: {{ porcentajes[2]|floatformat:'1' }}% <br />
           </div>
-        </div> 
+        </div>
       </div>
     </div>
     <div class="card">
@@ -34,17 +34,15 @@
         <div class="col-md-8">
           {% include 'componentes/chart.html' %}
         </div>
-        <div class="col-md-4 d-flex align-items-center ">
-          <div class= "flex-column ">
-            <h4>Porcentaje de la energía ahorrada:</h1>
-            • Neutral: {{porcentajes.0|floatformat:"1"}}% <br>
-            • Mañana: {{porcentajes.1|floatformat:"1"}}% <br>
-            • Tarde: {{porcentajes.2|floatformat:"1"}}% <br>
+        <div class="col-md-4 d-flex align-items-center">
+          <div class="flex-column">
+            <h4>Porcentaje de la energía ahorrada:</h4>
+            • Neutral: {{ porcentajes[0]|floatformat:'1' }}% <br />
+            • Mañana: {{ porcentajes[1]|floatformat:'1' }}% <br />
+            • Tarde: {{ porcentajes[2]|floatformat:'1' }}% <br />
           </div>
-        </div> 
+        </div>
       </div>
     </div>
   </div>
-</div>
-
 {% endblock %}
