@@ -56,24 +56,84 @@ def orientacion_placas_vecino(request: HttpRequest, vecino_id) -> HttpResponse:
     produccion_tarde.insert(0, 0)
     produccion_tarde = [i * 0.95 for i in produccion_tarde]
 
-    diferencias = []
-    diferencias.append(calcular_diferencia(produccion_agregada, consumo_agregado)*100)
-    diferencias.append(calcular_diferencia(produccion_mañana, consumo_agregado)*100)
-    diferencias.append(calcular_diferencia(produccion_tarde, consumo_agregado)*100)
-
     diferencias = [calcular_diferencia(p, consumo_agregado)*100 for p in [produccion_agregada, produccion_mañana, produccion_tarde]]
     context = {
-        "porcentajes": diferencias,
-        "chart": Chart(
-            "a",
-            str([i for i in range(24)]),
-            [
-                Dataset(str([c for c in consumo_agregado]), background_color="rgba(0,0,255,0.5)"),
-                Dataset(str([p for p in produccion_mañana]), background_color="rgba(0,255,0,1)"),
-                Dataset(str([p for p in produccion_agregada]), background_color="rgba(255,0,0,1)"),
-                Dataset(str([p for p in produccion_tarde]), background_color="rgba(255,255,0,1)"),
-            ],
-            [Scale()]
-        )
+        "acordeon": [
+            {
+                "semana": "Mes",
+                "porcentajes": diferencias,
+                "chart": Chart(
+                    "m",
+                    str([i for i in range(24)]),
+                    [
+                        Dataset(str([c for c in consumo_agregado]), background_color="rgba(0,0,255,0.5)"),
+                        Dataset(str([p for p in produccion_mañana]), background_color="rgba(0,255,0,1)"),
+                        Dataset(str([p for p in produccion_agregada]), background_color="rgba(255,0,0,1)"),
+                        Dataset(str([p for p in produccion_tarde]), background_color="rgba(255,255,0,1)"),
+                    ],
+                    [Scale()]
+                )
+            },
+            {
+                "semana": "Primera semana",
+                "porcentajes": diferencias,
+                "chart": Chart(
+                    "a",
+                    str([i for i in range(24)]),
+                    [
+                        Dataset(str([c for c in consumo_agregado]), background_color="rgba(0,0,255,0.5)"),
+                        Dataset(str([p for p in produccion_mañana]), background_color="rgba(0,255,0,1)"),
+                        Dataset(str([p for p in produccion_agregada]), background_color="rgba(255,0,0,1)"),
+                        Dataset(str([p for p in produccion_tarde]), background_color="rgba(255,255,0,1)"),
+                    ],
+                    [Scale()]
+                )
+            },
+            {
+                "semana": "Segunda semana",
+                "porcentajes": diferencias,
+                "chart": Chart(
+                    "b",
+                    str([i for i in range(24)]),
+                    [
+                        Dataset(str([c for c in consumo_agregado]), background_color="rgba(0,0,255,0.5)"),
+                        Dataset(str([p for p in produccion_mañana]), background_color="rgba(0,255,0,1)"),
+                        Dataset(str([p for p in produccion_agregada]), background_color="rgba(255,0,0,1)"),
+                        Dataset(str([p for p in produccion_tarde]), background_color="rgba(255,255,0,1)"),
+                    ],
+                    [Scale()]
+                )
+            },
+            {
+                "semana": "Tercera semana",
+                "porcentajes": diferencias,
+                "chart": Chart(
+                    "c",
+                    str([i for i in range(24)]),
+                    [
+                        Dataset(str([c for c in consumo_agregado]), background_color="rgba(0,0,255,0.5)"),
+                        Dataset(str([p for p in produccion_mañana]), background_color="rgba(0,255,0,1)"),
+                        Dataset(str([p for p in produccion_agregada]), background_color="rgba(255,0,0,1)"),
+                        Dataset(str([p for p in produccion_tarde]), background_color="rgba(255,255,0,1)"),
+                    ],
+                    [Scale()]
+                )
+            },
+            {
+                "semana": "Cuarta semana",
+                "porcentajes": diferencias,
+                "chart": Chart(
+                    "d",
+                    str([i for i in range(24)]),
+                    [
+                        Dataset(str([c for c in consumo_agregado]), background_color="rgba(0,0,255,0.5)"),
+                        Dataset(str([p for p in produccion_mañana]), background_color="rgba(0,255,0,1)"),
+                        Dataset(str([p for p in produccion_agregada]), background_color="rgba(255,0,0,1)"),
+                        Dataset(str([p for p in produccion_tarde]), background_color="rgba(255,255,0,1)"),
+                    ],
+                    [Scale()]
+                )
+            },
+        ]
     }
     return render(request, "decisiones/orientacion_placas.html", context=context)

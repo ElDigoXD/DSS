@@ -3,46 +3,56 @@
 {% load static %}
 
 {% block title %}
-  Cambios de orientacion de las placas
+Cambios de orientacion de las placas
 {% endblock %}
 
 {% block imports %}
-  <!-- ChartJS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<!-- ChartJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 {% endblock %}
 
 {% block body %}
-  <div class="d-flex flex-column flex-fill justify-content-center align-items-center">
-    <img height="50" src="{% static 'gif.gif' %}" />
-    <div class="card mb-4">
-      <div class="row g-0">
-        <div class="col-md-8">
-          {% include 'componentes/chart.html' %}
-        </div>
-        <div class="col-md-4 d-flex align-items-center">
-          <div class="flex-column">
-            <h4>Porcentaje de la energía ahorrada:</h4>
-            • Neutral: {{ porcentajes[0]|floatformat:'1' }}% <br />
-            • Mañana: {{ porcentajes[1]|floatformat:'1' }}% <br />
-            • Tarde: {{ porcentajes[2]|floatformat:'1' }}% <br />
+<div class="d-flex flex-column flex-fill offset-xl-2 col-xl-8 col-12">
+  <div class="accordion open" id="accordionExample">
+    {% for item in acordeon %}
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button {% if not forloop.first %} collapsed {% endif %}" type="button"
+                data-bs-toggle="collapse" data-bs-target="#collapse{{forloop.counter}}">
+          {{ item.semana }}
+        </button>
+      </h2>
+      <div id="collapse{{forloop.counter}}" class="accordion-collapse collapse {% if forloop.first %} show {% endif %}"
+           data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <div class="row" min>
+            <div class="col-8">
+              {% include 'componentes/chart.html' with chart=item.chart %}
+            </div>
+            <div class="col-4 d-flex align-items-center">
+              <div class="flex-column">
+                <h4>Porcentaje de la energía ahorrada:</h4>
+                {% with item.porcentajes as porcentajes %}
+                • Neutral:
+                <span {% if porcentajes.0 > porcentajes.1 and porcentajes.0 > porcentajes.2 %} class="text-success" {% endif %}>
+                  {{ porcentajes.0|floatformat:'1' }}% <br />
+                </span>
+                • Mañana:
+                <span {% if porcentajes.1 > porcentajes.0 and porcentajes.1 > porcentajes.2 %} class="text-success" {% endif %}>
+                  {{ porcentajes.1|floatformat:'1' }}% <br />
+                  • Tarde:
+                  <span {% if porcentajes.2 > porcentajes.0 and porcentajes.2 > porcentajes.1 %} class="text-success" {% endif %}>
+                    {{ porcentajes.2|floatformat:'1' }}% <br />
+              {% endwith %}
+
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="card">
-      <div class="row g-0">
-        <div class="col-md-8">
-          {% include 'componentes/chart.html' %}
-        </div>
-        <div class="col-md-4 d-flex align-items-center">
-          <div class="flex-column">
-            <h4>Porcentaje de la energía ahorrada:</h4>
-            • Neutral: {{ porcentajes[0]|floatformat:'1' }}% <br />
-            • Mañana: {{ porcentajes[1]|floatformat:'1' }}% <br />
-            • Tarde: {{ porcentajes[2]|floatformat:'1' }}% <br />
-          </div>
-        </div>
-      </div>
-    </div>
+    {% endfor %}
   </div>
+</div>
 {% endblock %}
