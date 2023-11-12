@@ -11,6 +11,16 @@ Cambios de orientacion de las placas
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 {% endblock %}
 
+
+{% block style %}
+  <style>
+    .table-text-success>td {
+      color: var(--bs-success) !important
+    }
+  </style>
+{% endblock style %}
+  
+
 {% block body %}
 <div class="d-flex flex-column flex-fill offset-xl-2 col-xl-8 col-12">
   <div class="accordion open" id="accordionExample">
@@ -32,20 +42,34 @@ Cambios de orientacion de las placas
             <div class="col-4 d-flex align-items-center">
               <div class="flex-column">
                 <h4>Energía ahorrada por las placas:</h4>
-                • Total consumido: {{ item.totales.total|floatformat:'1' }} kW <br />
+                
                 {% with item.porcentajes as porcentajes %}
-                • Neutral:
-                <span {% if porcentajes.0 >= porcentajes.1 and porcentajes.0 >= porcentajes.2 %} class="text-success" {% endif %}>
-                  {{ item.totales.normal|floatformat:'1' }} kW ({{ porcentajes.0|floatformat:'1' }}%) <br />
-                </span>
-                • Mañana:
-                <span {% if porcentajes.1 >= porcentajes.0 and porcentajes.1 >= porcentajes.2 %} class="text-success" {% endif %}>
-                  {{ item.totales.mañana|floatformat:'1' }} kW ({{ porcentajes.1|floatformat:'1' }}%) <br />
-                </span>
-                • Tarde:
-                <span {% if porcentajes.2 >= porcentajes.0 and porcentajes.2 >= porcentajes.1 %} class="text-success" {% endif %}>
-                  {{ item.totales.tarde|floatformat:'1' }} kW ({{ porcentajes.2|floatformat:'1' }}%) <br />
-                </span>
+                <table class="table">
+                  <tr>
+                    <td>Total consumido:</td>
+                    <td>{{ item.totales.total|floatformat:'1' }} kW</td>
+                    <td></td>
+                    <td>{{ item.precios.0|floatformat:'1' }}€</td>
+                  </tr>
+                  {% if porcentajes.0 >= porcentajes.1 and porcentajes.0 >= porcentajes.2 %} <tr class="table-text-success"> {% else %}<tr>{% endif %}
+                    <td>Neutral:</td>
+                    <td>{{ item.totales.normal|floatformat:'1' }} kW</td>
+                    <td>{{ item.porcentajes.0|floatformat:'1' }}%</td>
+                    <td>{{ item.precios.1|floatformat:'1' }}€</td>
+                  </tr>
+                  {% if porcentajes.1 >= porcentajes.0 and porcentajes.1 >= porcentajes.2 %} <tr class="table-text-success"> {% else %}<tr>{% endif %}
+                    <td>Mañana:</td>
+                    <td>{{ item.totales.mañana|floatformat:'1' }} kW</td>
+                    <td>{{ item.porcentajes.1|floatformat:'1' }}%</td>
+                    <td>{{ item.precios.2|floatformat:'1' }}€</td>
+                  </tr>            
+                  {% if porcentajes.2 >= porcentajes.0 and porcentajes.2 >= porcentajes.1 %} <tr class="table-text-success"> {% else %}<tr>{% endif %}
+                    <td>Tarde:</td>
+                    <td>{{ item.totales.tarde|floatformat:'1' }} kW</td>
+                    <td>{{ item.porcentajes.2|floatformat:'1' }}%</td>
+                    <td>{{ item.precios.3|floatformat:'1' }}€</td>
+                  </tr>
+                </table>
                 {% endwith %}
               </div>
             </div>
