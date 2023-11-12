@@ -15,11 +15,13 @@ class Dataset:
 
     def __init__(self,
                  data: str,
+                 label="",
                  y_axis_id="y",
                  background_color="rgba(0,0,255,0.5)",
                  border_color="rgba(0,0,255,0.1)"
                  ):
         self.data = data
+        self.label = label
         self.y_axis_id = y_axis_id
         self.background_color = background_color
         self.border_color = border_color
@@ -51,13 +53,15 @@ class Chart:
                  x_labels: str,
                  datasets: list[Dataset],
                  scales: list[Scale],
-                 type=Type.LINE
+                 type=Type.LINE,
+                 legend=False
                  ):
         self.canvas_id = canvas_id
         self.x_labels = x_labels
         self.datasets = datasets
         self.scales = scales
         self.type = "line" if type == Type.LINE else "bar"
+        self.legend = legend
 
 
 # {{{# chart: type, canvas_id, x_labels, datasets #}}}

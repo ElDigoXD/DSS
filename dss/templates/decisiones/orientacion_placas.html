@@ -31,22 +31,23 @@ Cambios de orientacion de las placas
             </div>
             <div class="col-4 d-flex align-items-center">
               <div class="flex-column">
-                <h4>Porcentaje de la energía ahorrada:</h4>
+                <h4>Energía ahorrada por las placas:</h4>
+                • Total consumido: {{ item.totales.total|floatformat:'1' }} kW <br />
                 {% with item.porcentajes as porcentajes %}
                 • Neutral:
-                <span {% if porcentajes.0 > porcentajes.1 and porcentajes.0 > porcentajes.2 %} class="text-success" {% endif %}>
-                  {{ porcentajes.0|floatformat:'1' }}% <br />
+                <span {% if porcentajes.0 >= porcentajes.1 and porcentajes.0 >= porcentajes.2 %} class="text-success" {% endif %}>
+                  {{ item.totales.normal|floatformat:'1' }} kW ({{ porcentajes.0|floatformat:'1' }}%) <br />
                 </span>
                 • Mañana:
-                <span {% if porcentajes.1 > porcentajes.0 and porcentajes.1 > porcentajes.2 %} class="text-success" {% endif %}>
-                  {{ porcentajes.1|floatformat:'1' }}% <br />
-                  • Tarde:
-                  <span {% if porcentajes.2 > porcentajes.0 and porcentajes.2 > porcentajes.1 %} class="text-success" {% endif %}>
-                    {{ porcentajes.2|floatformat:'1' }}% <br />
-              {% endwith %}
-
+                <span {% if porcentajes.1 >= porcentajes.0 and porcentajes.1 >= porcentajes.2 %} class="text-success" {% endif %}>
+                  {{ item.totales.mañana|floatformat:'1' }} kW ({{ porcentajes.1|floatformat:'1' }}%) <br />
+                </span>
+                • Tarde:
+                <span {% if porcentajes.2 >= porcentajes.0 and porcentajes.2 >= porcentajes.1 %} class="text-success" {% endif %}>
+                  {{ item.totales.tarde|floatformat:'1' }} kW ({{ porcentajes.2|floatformat:'1' }}%) <br />
+                </span>
+                {% endwith %}
               </div>
-
             </div>
           </div>
         </div>
