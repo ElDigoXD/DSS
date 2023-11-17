@@ -1,9 +1,7 @@
 from ast import Tuple
 from datetime import date, datetime, timedelta
 from functools import reduce
-from itertools import accumulate, groupby
-import itertools
-import json
+from itertools import groupby
 from pprint import pprint
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
@@ -98,8 +96,6 @@ def orientacion_placas_vecino(request: HttpRequest, vecino_id) -> HttpResponse:
          produccion_normal, produccion_mañana, produccion_tarde,
          ahorro_normal, ahorro_mañana, ahorro_tarde,
          precio_total, precio_normal, precio_mañana, precio_tarde) = obtener_semana(i, list(consumo), list(produccion), list(precio), vecino.porcentaje)
-
-        print(precio_total, precio_normal, precio_mañana, precio_tarde)
 
         diferencias = [sum(ahorro_normal)/sum(consumo_agregado)*100, sum(ahorro_mañana)/sum(consumo_agregado)*100, sum(ahorro_tarde)/sum(consumo_agregado)*100]
         totales = {"total": sum(consumo_agregado)/1000, "normal": sum(ahorro_normal)/1000, "mañana": sum(ahorro_mañana)/1000, "tarde": sum(ahorro_tarde)/1000}
