@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from enum import Enum
 
 
@@ -62,7 +61,6 @@ class Chart:
         self.scales = scales
         self.type = "line" if type == Type.LINE else "bar"
         self.legend = legend
-
 
 # {{{# chart: type, canvas_id, x_labels, datasets #}}}
 # {{{# datasets: [background_color, bordercolor, data, y_axis_id] #}}}

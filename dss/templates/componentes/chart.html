@@ -7,31 +7,32 @@
                 labels: {{ chart.x_labels }},
                 datasets: [
                     {% for dataset in chart.datasets %}
-                    {
-                        label: "{{ dataset.label }}",
-                        backgroundColor: "{{ dataset.background_color }}",
-                        borderColor: "{{ dataset.border_color }}",
-                        data: {{ dataset.data }},
-                        yAxisID: "{{ dataset.y_axis_id }}"
-                    },
+                        {
+                            label: "{{ dataset.label }}",
+                            backgroundColor: "{{ dataset.background_color }}",
+                            borderColor: "{{ dataset.border_color }}",
+                            data: {{ dataset.data }},
+                            yAxisID: "{{ dataset.y_axis_id }}"
+                        },
                     {% endfor %}
-              ]
-                
+                ]
+
             },
             options: {
-                legend: { display: {{ chart.legend|lower }} },
-                scales:{
+                legend: {display: {{ chart.legend|lower }}},
+                scales: {
                     yAxes: [
-                        {% for scale in chart.scales %}  
-                        {
-                            type: 'linear',
-                            display: true,
-                            position: '{{ scale.position }}',
-                            id: "{{ scale.name }}",
-                            {{ scale.ticks }}
-                        },
+                        {% for scale in chart.scales %}
+                            {
+                                type: 'linear',
+                                display: true,
+                                position: '{{ scale.position }}',
+                                id: "{{ scale.name }}",
+                                {{ scale.ticks }}
+                            },
                         {% endfor %}
-                ]}
+                    ]
+                }
             }
         })
     })()

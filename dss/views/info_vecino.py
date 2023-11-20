@@ -1,6 +1,4 @@
-
-
-from datetime import date, datetime
+from datetime import datetime
 from typing import Tuple
 
 from django.http import Http404, HttpRequest, HttpResponse
@@ -27,7 +25,7 @@ def vecino_fecha_GET(vecino_id_str: str | None, fecha_str: str | None) -> Tuple[
 
 
 def info_vecino(request: HttpRequest) -> HttpResponse:
-    # Si la petición contiene algún parametro get
+    # Si la petición contiene algún parámetro get
     vecino_id_str = request.GET.get("vecino_id")
     fecha_str = request.GET.get("fecha")
 
@@ -43,11 +41,11 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
         # navegar a páginas sin tener que pasar parámetros en la url
         request.session["vecino_id"] = vecino.pk
         request.session["fecha"] = datetime.strftime(fecha, "%Y-%m-%d")
-        
+
         # Descomentar para "limpiar" los parametros de la url, 
         # si cambiamos de GET a POST no debería hacer falta
-        #return redirect("datos_vecino")
-        
+        # return redirect("datos_vecino")
+
     else:
         vecino_id = request.session.get("vecino_id")
         fecha_str = request.session.get("fecha")
@@ -60,19 +58,18 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
         fecha = datetime.strptime(fecha_str, "%Y-%m-%d")
         vecino = Vecino.objects.filter(id=vecino_id).first()
         if not vecino:
-            raise(Http404)
+            raise (Http404)
 
     # Filtra los objetos Consumo y Produccion relacionados con el vecino
     consumo_vecino = Consumo.objects.filter(vecino=vecino)
     consumo_total = Consumo.objects.filter(fecha=fecha.date()).all()
-    
+
     consumo_agregado = [0.0] * 24
 
     for i in range(24):
         for h in consumo_total:
             if h.hora.hour == i:
                 consumo_agregado[i] = consumo_agregado[i] + h.kw_media_consumidos
-                
 
     consumo = consumo_vecino.filter(fecha=fecha.date()).all()
     produccion = Produccion.objects.filter(fecha=fecha.date()).all()
@@ -130,7 +127,7 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
                 datasets=[
                     Dataset(str([g for g in listaGanancia])),
                     Dataset(
-                        data=str([precio[i].precio * listaGanancia[i]/1000 for i in range(24)]),
+                        data=str([precio[i].precio * listaGanancia[i] / 1000 for i in range(24)]),
                         y_axis_id="y2",
                         background_color="rgba(255,0,0,0.5)")
                 ],

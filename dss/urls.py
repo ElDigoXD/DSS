@@ -18,8 +18,6 @@ from django.contrib import admin
 from django.urls import path
 
 from dss.views.decisiones.aumento_participacion import aumento_participacion_vecino
-
-
 from .views import *
 
 urlpatterns = [

@@ -1,6 +1,6 @@
 import csv
 import json
-from datetime import date, datetime, time
+from datetime import date, datetime
 from typing import Any
 
 from django.http import HttpRequest, HttpResponse, JsonResponse
@@ -8,11 +8,11 @@ from django.shortcuts import render
 from requests import Response, get
 
 from dss.models import Consumo, ConsumoDev, Precio_kw, Precio_venta, Vecino, Produccion
-
-from .info_vecino import info_vecino
 from .decisiones.aumento_participacion import aumento_participacion
 from .decisiones.baterias import baterias
 from .decisiones.orientacion_placas import orientacion_placas, orientacion_placas_vecino
+from .info_vecino import info_vecino
+
 
 def bs_test(request: HttpRequest) -> HttpResponse:
     return HttpResponse("")
@@ -25,7 +25,7 @@ def bs_test(request: HttpRequest) -> HttpResponse:
     return HttpResponse(
         f"<html><body>It is now {datetime.now()}.</body></html>"
     )
-   
+
 
 def index(request: HttpRequest) -> HttpResponse:
     vecinos = Vecino.objects.all()
@@ -79,7 +79,6 @@ def load_precios(request: HttpRequest) -> HttpResponse:
 
 
 def load_data(request: HttpRequest) -> HttpResponse:
-
     res = get("https://api.preciodelaluz.org/v1/prices/all?zone=PCB")
     print(res.text)
 
@@ -104,7 +103,8 @@ def load_data(request: HttpRequest) -> HttpResponse:
 
 
 def test(request: HttpRequest) -> HttpResponse:
-    res = get("https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real?start_date=2023-01-01T00:00&end_date=2023-01-31T23:59&time_trunc=hour")
+    res = get(
+        "https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real?start_date=2023-01-01T00:00&end_date=2023-01-31T23:59&time_trunc=hour")
 
     values = json.loads(res.text)["included"][0]["attributes"]["values"]
     for value in values:
@@ -112,7 +112,7 @@ def test(request: HttpRequest) -> HttpResponse:
             fecha=datetime.fromisoformat(value["datetime"]),
             hora=datetime.fromisoformat(value["datetime"]),
             defaults={
-                "precio": value["value"]/1000,
+                "precio": value["value"] / 1000,
                 "duracion_m": 60,
             }
         )
