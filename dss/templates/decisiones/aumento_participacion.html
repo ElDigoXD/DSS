@@ -33,8 +33,8 @@
                class="accordion-collapse collapse {% if forloop.first %} show {% endif %}"
                data-bs-parent="#accordionExample">
             <div class="accordion-body">
-              <div class="row" min>
-                <div class="col-4 d-flex align-items-center">
+              <div class="row">
+                <div class="col-5 d-flex align-items-center">
                   <div class="flex-column">
                     <h4>Energía ahorrada por las placas:</h4>
 
@@ -45,33 +45,57 @@
                           <td>{{ item.totales.total|floatformat:'1' }} kWh</td>
                           <td></td>
                           <td>{{ item.precios.0|floatformat:'1' }}€</td>
+                          <td></td>
                         </tr>
-                        {% if porcentajes.0 >= porcentajes.1 and porcentajes.0 >= porcentajes.2 %}
-                          <tr class="table-text-success"> {% else %}
-                          <tr>{% endif %}
-                        <td>Normal:</td>
-                        <td>{{ item.totales.normal|floatformat:'1' }} kWh</td>
-                        <td>{{ item.porcentajes.0|floatformat:'1' }}%</td>
-                        <td id="precio_normal">{{ item.precios.1|floatformat:'1' }}€</td>
+                        <tr>
+                          <th>Ahorro</th>
+                          <th>kWh</th>
+                          <th>%</th>
+                          <th>€</th>
+                          <th>Excedente</th>
                         </tr>
-                        {% if porcentajes.1 >= porcentajes.0 and porcentajes.1 >= porcentajes.2 %}
-                          <tr class="table-text-success"> {% else %}
-                          <tr>{% endif %}
-                        <td>Aumentado:</td>
-                        <td>{{ item.totales.aumentado|floatformat:'1' }} kWh</td>
-                        <td id="porcentaje">{{ item.porcentajes.1|floatformat:'1' }}%</td>
-                        <td id="precio_aumentado">{{ item.precios.2|floatformat:'1' }}€</td>
+
+                        <tr
+                            {% if porcentajes.0 >= porcentajes.1 and porcentajes.0 >= porcentajes.2 %}
+                              class="table-text-success"
+                            {% endif %}
+                        >
+                          <td>Normal:</td>
+                          <td>{{ item.totales.normal|floatformat:'1' }} kWh</td>
+                          <td>{{ item.porcentajes.0|floatformat:'1' }}%</td>
+                          <td id="precio_normal">{{ item.precios.1|floatformat:'1' }}€</td>
+                          <td id="precio_excedente_normal">{{ item.devolucion_excedente.0|floatformat:'1' }}€</td>
+                        </tr>
+                        <tr
+                            {% if porcentajes.1 >= porcentajes.0 and porcentajes.1 >= porcentajes.2 %}
+                              class="table-text-success"
+                            {% endif %}
+                        >
+                          <td>Aumentado:</td>
+                          <td>{{ item.totales.aumentado|floatformat:'1' }} kWh</td>
+                          <td id="">{{ item.porcentajes.1|floatformat:'1' }}%</td>
+                          <td id="precio_aumentado">{{ item.precios.2|floatformat:'1' }}€</td>
+                          <td id="precio_excedente_aumentado">{{ item.devolucion_excedente.1|floatformat:'1' }}€</td>
                         </tr>
                       </table>
                     {% endwith %}
-
-                    <input type="number" name="" id="">
-                    <input type="number" name="" id="precio">
-                    <button class="btn btn-primary" onclick="aaa()">Calcular</button>
-                    <span id="roi">aa</span>
+                    <!-- Formulario del Roi -->
+                    <div class="input-group mb-1">
+                      <span class="input-group-text justify-content-center" style="width: 2.5em">%</span>
+                      <select id="porcentaje" type="number" class="form-select" name="">
+                        <option value="0.05">5% (2.1kW)</option>
+                        <option value="0.1" selected>10% (4.2kW)</option>
+                      </select>
+                    </div>
+                    <div class="input-group mb-1">
+                      <span class="input-group-text justify-content-center" style="width: 2.5em">€</span>
+                      <input type="number" class="form-control" name="" id="precio">
+                    </div>
+                    <button class="btn btn-primary me-2" onclick="aaa()">Calcular</button>
+                    <label id="roi" class="form-label">aa</label>
                   </div>
                 </div>
-                <div class="col-8">
+                <div class="col-7">
                   {% include 'componentes/chart.html' with chart=item.chart %}
                 </div>
               </div>
@@ -85,21 +109,25 @@
   <script>
       function aaa() {
           // total contratado 42 kw
-          function bbb(elemento) {
+          function parseNumber(elemento) {
               return Number(elemento.innerHTML.replace("%", "").replace("€", ""))
           }
 
-          // porcentaje = document.getElementById("porcentaje")
           const precio = document.getElementById("precio")
           const precio_normal = document.getElementById("precio_normal")
+          const precio_excedente_normal = document.getElementById("precio_excedente_normal")
           const precio_aumentado = document.getElementById("precio_aumentado")
+          const precio_excedente_aumentado = document.getElementById("precio_excedente_aumentado")
           const roi = document.getElementById("roi")
 
-          const diferencia = bbb(precio_aumentado) - bbb(precio_normal)
-          roi.innerHTML = (precio.value / diferencia / 12).toFixed(1)
+          const n_precio_normal = parseNumber(precio_normal)
+          const n_precio_excedente_normal = parseNumber(precio_excedente_normal)
+          const n_precio_aumentado = parseNumber(precio_aumentado)
+          const n_precio_excedente_aumentado = parseNumber(precio_excedente_aumentado)
 
 
-          //Number(porcentaje.innerHTML.replace("%", ""))
+          const diferencia = n_precio_aumentado - n_precio_normal + n_precio_excedente_aumentado - n_precio_excedente_normal
+          roi.innerHTML = (precio.value / diferencia / 12).toFixed(1) + " Años"
       }
   </script>
 {% endblock %}

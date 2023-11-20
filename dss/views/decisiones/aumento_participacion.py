@@ -1,7 +1,6 @@
 from datetime import date
 from functools import reduce
 from itertools import groupby
-from pprint import pprint
 from typing import Any
 
 from django.http import Http404, HttpRequest, HttpResponse
@@ -14,6 +13,7 @@ from dss.models.produccion import Produccion
 from dss.models.vecino import Vecino
 
 PORCENTAJE_AUMENTO = 0.05
+PORCENTAJE_PRECIO_COMPENSACION = 0.75
 
 
 def aumento_participacion(request: HttpRequest) -> HttpResponse:
@@ -28,10 +28,9 @@ def obtener_semana(semana: int, consumo: list[Consumo], produccion: list[Producc
     consumo_agregado = [reduce(lambda acc, x: acc + x.kw_media_consumidos, v, 0.0)
                         for _, v in groupby(sorted(consumo_diario, key=lambda x: x.hora.hour), lambda x: x.hora.hour)]
 
-    produccion_diaria = produccion[slice_semana]
     produccion_normal = [reduce(lambda acc, x: acc + x.kw_media_producidos * porcentaje, v, 0.0)
                          for _, v in
-                         groupby(sorted(produccion_diaria, key=lambda x: x.hora.hour), lambda x: x.hora.hour)]
+                         groupby(sorted(produccion[slice_semana], key=lambda x: x.hora.hour), lambda x: x.hora.hour)]
 
     def aplicar_porcentaje(x: Produccion, porcentaje: float) -> float:
         return x.kw_media_producidos * porcentaje
@@ -40,7 +39,6 @@ def obtener_semana(semana: int, consumo: list[Consumo], produccion: list[Producc
     produccion_aumentada_diaria = list(
         map(lambda x: aplicar_porcentaje(x, porcentaje + PORCENTAJE_AUMENTO), produccion[slice_semana]))
 
-    pprint(list(zip(produccion_diaria, produccion_aumentada_diaria)))
     ahorro_normal_diario = list(map(lambda p, c: min(p, c.kw_media_consumidos),
                                     produccion_diaria, consumo_diario))
 
@@ -50,12 +48,20 @@ def obtener_semana(semana: int, consumo: list[Consumo], produccion: list[Producc
     ahorro_normal = sum(ahorro_normal_diario)
     ahorro_aumentado = sum(ahorro_aumentado_diario)
 
+    def calcular_precio_energía_ahorrada(ahorro_diario: list[float], precio_kw_diario: list[Precio_venta]) -> list[float]:
+        return list(map(lambda a, p: a * p.precio, ahorro_diario, precio_kw_diario))
+
     precio_kw_diario = precio_kw[slice_semana]
-    precio_energia_total = sum(
-        list(map(lambda c, p: c.kw_media_consumidos * p.precio, consumo_diario, precio_kw_diario))) / 1000
-    precio_energia_normal = sum(list(map(lambda a, p: a * p.precio, ahorro_normal_diario, precio_kw_diario))) / 1000
-    precio_energia_aumentado = sum(
-        list(map(lambda a, p: a * p.precio, ahorro_aumentado_diario, precio_kw_diario))) / 1000
+    precio_energia_ahorrada_total = sum(list(map(lambda c, p: c.kw_media_consumidos * p.precio, consumo_diario, precio_kw_diario))) / 1000
+    precio_energia_ahorrada_normal = sum(calcular_precio_energía_ahorrada(ahorro_normal_diario, precio_kw_diario)) / 1000
+    precio_energia_ahorrada_aumentado = sum(calcular_precio_energía_ahorrada(ahorro_aumentado_diario, precio_kw_diario)) / 1000
+
+    excedente_diario = map(lambda p, c: max(0.0, p - c.kw_media_consumidos), produccion_diaria, consumo_diario)
+    excedente_consumo_diario = map(lambda p, c: max(0.0, p - c.kw_media_consumidos), produccion_aumentada_diaria, consumo_diario)
+
+    precio_excedente_diario = map(lambda e, p: e * p.precio * PORCENTAJE_PRECIO_COMPENSACION/1000, excedente_diario, precio_kw_diario)
+    precio_excedente_aumentado_diario = map(lambda e, p: e * p.precio * PORCENTAJE_PRECIO_COMPENSACION/1000, excedente_consumo_diario, precio_kw_diario)
+
 
     produccion_total = reduce(lambda acc, x: x.kw_media_consumidos + acc, consumo_diario, 0.0)
 
@@ -64,7 +70,8 @@ def obtener_semana(semana: int, consumo: list[Consumo], produccion: list[Producc
         "totales": {"total": produccion_total / 1000, "normal": ahorro_normal / 1000,
                     "aumentado": ahorro_aumentado / 1000},
         "porcentajes": [ahorro_normal / produccion_total * 100, ahorro_aumentado / produccion_total * 100],
-        "precios": [precio_energia_total, precio_energia_normal, precio_energia_aumentado],
+        "precios": [precio_energia_ahorrada_total, precio_energia_ahorrada_normal, precio_energia_ahorrada_aumentado],
+        "devolucion_excedente": [sum(precio_excedente_diario), sum(precio_excedente_aumentado_diario)],
         "chart": Chart(
             str(semana),
             str([i for i in range(24)]),
