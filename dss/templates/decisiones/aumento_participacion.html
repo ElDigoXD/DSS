@@ -24,8 +24,8 @@
       {% for item in acordeon %}
         <div class="accordion-item">
           <h2 class="accordion-header">
-            <button class="accordion-button {% if not forloop.first %} collapsed {% endif %}" type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}">
+            <button class="accordion-button {% if not forloop.first %} collapsed {% endif %}" type="button">
+                    <!--data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" -->
               {{ item.semana }}
             </button>
           </h2>
@@ -36,63 +36,79 @@
               <div class="row">
                 <div class="col-5 d-flex align-items-center">
                   <div class="flex-column">
-                    <h4>Energía ahorrada por las placas:</h4>
+                    <h4>Análisis del aumento de capacidad de producción:</h4>
 
                     {% with item.porcentajes as porcentajes %}
                       <table class="table">
                         <tr>
-                          <td>Total consumido:</td>
-                          <td>{{ item.totales.total|floatformat:'1' }} kWh</td>
+                          <td >Total consumido:</td>
+                          <td data-bs-toggle="tooltip" data-bs-title="Total de kWh consumidos">{{ item.totales.total|floatformat:'1' }} kWh</td>
                           <td></td>
-                          <td>{{ item.precios.0|floatformat:'1' }}€</td>
+                          <td  data-bs-toggle="tooltip" data-bs-title="Precio factura">{{ item.precios.0|floatformat:'1' }}€</td>
                           <td></td>
                         </tr>
                         <tr>
-                          <th>Ahorro</th>
-                          <th>kWh</th>
-                          <th>%</th>
-                          <th>€</th>
-                          <th>Excedente</th>
+                          <th data-bs-toggle="tooltip" data-bs-title="Producción actual y aumentada">Producción</th>
+                          <th data-bs-toggle="tooltip" data-bs-title="kWh autoconsumidos">kWh</th>
+                          <th data-bs-toggle="tooltip" data-bs-title="Porcentaje del autoconsumo respecto al consumo total">%</th>
+                          <th data-bs-toggle="tooltip" data-bs-title="Dinero ahorrado por autoconsumo">€</th>
+                          <th data-bs-toggle="tooltip" data-bs-title="Dinero compensado por la venta del excedente">Excedente</th>
                         </tr>
 
-                        <tr
-                            {% if porcentajes.0 >= porcentajes.1 and porcentajes.0 >= porcentajes.2 %}
-                              class="table-text-success"
-                            {% endif %}
-                        >
-                          <td>Normal:</td>
+                        <tr>
+                          <td>Actual: {{ kw_contratados }} kW</td>
                           <td>{{ item.totales.normal|floatformat:'1' }} kWh</td>
                           <td>{{ item.porcentajes.0|floatformat:'1' }}%</td>
                           <td id="precio_normal">{{ item.precios.1|floatformat:'1' }}€</td>
                           <td id="precio_excedente_normal">{{ item.devolucion_excedente.0|floatformat:'1' }}€</td>
                         </tr>
-                        <tr
-                            {% if porcentajes.1 >= porcentajes.0 and porcentajes.1 >= porcentajes.2 %}
-                              class="table-text-success"
-                            {% endif %}
-                        >
-                          <td>Aumentado:</td>
-                          <td>{{ item.totales.aumentado|floatformat:'1' }} kWh</td>
+                        <tr>
+                          <td>+ 2.1 kW:</td>
+                          <td>{{ item.totales.aumentado_5|floatformat:'1' }} kWh</td>
                           <td id="">{{ item.porcentajes.1|floatformat:'1' }}%</td>
-                          <td id="precio_aumentado">{{ item.precios.2|floatformat:'1' }}€</td>
-                          <td id="precio_excedente_aumentado">{{ item.devolucion_excedente.1|floatformat:'1' }}€</td>
+                          <td id="precio_aumentado_5">{{ item.precios.2|floatformat:'1' }}€</td>
+                          <td id="precio_excedente_aumentado_5">{{ item.devolucion_excedente.1|floatformat:'1' }}€</td>
                         </tr>
+                        <tr>
+                          <td>+ 4.2 kW:</td>
+                          <td>{{ item.totales.aumentado_10|floatformat:'1' }} kWh</td>
+                          <td id="">{{ item.porcentajes.2|floatformat:'1' }}%</td>
+                          <td id="precio_aumentado_10">{{ item.precios.3|floatformat:'1' }}€</td>
+                          <td id="precio_excedente_aumentado_10">{{ item.devolucion_excedente.2|floatformat:'1' }}€</td>
+                        </tr>
+                        <tr>
+                          <td>+ 6.3 kW:</td>
+                          <td>{{ item.totales.aumentado_15|floatformat:'1' }} kWh</td>
+                          <td id="">{{ item.porcentajes.3|floatformat:'1' }}%</td>
+                          <td id="precio_aumentado_15">{{ item.precios.4|floatformat:'1' }}€</td>
+                          <td id="precio_excedente_aumentado_15">{{ item.devolucion_excedente.3|floatformat:'1' }}€</td>
+                        </tr>
+                        <tr>
+                          <td>+ 8.4 kW:</td>
+                          <td>{{ item.totales.aumentado_20|floatformat:'1' }} kWh</td>
+                          <td id="">{{ item.porcentajes.4|floatformat:'1' }}%</td>
+                          <td id="precio_aumentado_20">{{ item.precios.5|floatformat:'1' }}€</td>
+                          <td id="precio_excedente_aumentado_20">{{ item.devolucion_excedente.4|floatformat:'1' }}€</td>
+                        </tr>
+                        
                       </table>
                     {% endwith %}
                     <!-- Formulario del Roi -->
                     <div class="input-group mb-1">
                       <span class="input-group-text justify-content-center" style="width: 2.5em">%</span>
                       <select id="porcentaje" type="number" class="form-select" name="">
-                        <option value="0.05">5% (2.1kW)</option>
-                        <option value="0.1" selected>10% (4.2kW)</option>
+                        <option value="5">2.1kW</option>
+                        <option value="10">4.2kW</option>
+                        <option value="15">6.3kW</option>
+                        <option value="20">8.4kW</option>
                       </select>
                     </div>
                     <div class="input-group mb-1">
                       <span class="input-group-text justify-content-center" style="width: 2.5em">€</span>
-                      <input type="number" class="form-control" name="" id="precio">
+                      <input type="number" class="form-control" name="" id="precio" placeholder="Precio del aumento" >
                     </div>
                     <button class="btn btn-primary me-2" onclick="aaa()">Calcular</button>
-                    <label id="roi" class="form-label">aa</label>
+                    <label id="roi" class="form-label">ROI: </label>
                   </div>
                 </div>
                 <div class="col-7">
@@ -113,11 +129,14 @@
               return Number(elemento.innerHTML.replace("%", "").replace("€", ""))
           }
 
+          const porcentaje = document.getElementById("porcentaje")
+
           const precio = document.getElementById("precio")
+          if (precio.value === "") return
           const precio_normal = document.getElementById("precio_normal")
           const precio_excedente_normal = document.getElementById("precio_excedente_normal")
-          const precio_aumentado = document.getElementById("precio_aumentado")
-          const precio_excedente_aumentado = document.getElementById("precio_excedente_aumentado")
+          const precio_aumentado = document.getElementById("precio_aumentado_" + porcentaje.value)
+          const precio_excedente_aumentado = document.getElementById("precio_excedente_aumentado_" + porcentaje.value)
           const roi = document.getElementById("roi")
 
           const n_precio_normal = parseNumber(precio_normal)
@@ -127,7 +146,7 @@
 
 
           const diferencia = n_precio_aumentado - n_precio_normal + n_precio_excedente_aumentado - n_precio_excedente_normal
-          roi.innerHTML = (precio.value / diferencia / 12).toFixed(1) + " Años"
+          roi.innerHTML = "ROI: " + (precio.value / diferencia / 12).toFixed(1) + " Años"
       }
   </script>
 {% endblock %}

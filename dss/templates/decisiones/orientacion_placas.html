@@ -39,20 +39,26 @@
               <div class="row">
                 <div class="col-4 d-flex align-items-center">
                   <div class="flex-column">
-                    <h4>Energía ahorrada por las placas:</h4>
+                    <h4>Análisis de cambio de orientación:</h4>
 
                     {% with item.porcentajes as porcentajes %}
                       <table class="table">
                         <tr>
                           <td>Total consumido:</td>
-                          <td>{{ item.totales.total|floatformat:'1' }} kWh</td>
+                          <td data-bs-toggle="tooltip" data-bs-title="Total de kWh consumidos">{{ item.totales.total|floatformat:'1' }} kWh</td>
                           <td></td>
-                          <td>{{ item.precios.0|floatformat:'1' }}€</td>
+                          <td data-bs-toggle="tooltip" data-bs-title="Precio factura">{{ item.precios.0|floatformat:'1' }}€</td>
+                        </tr>
+                        <tr>
+                          <th data-bs-toggle="tooltip" data-bs-title="Orientación actual y modificada">Orientación</th>
+                          <th data-bs-toggle="tooltip" data-bs-title="kWh autoconsumidos">kWh</th>
+                          <th data-bs-toggle="tooltip" data-bs-title="Porcentaje del autoconsumo respecto al consumo total">%</th>
+                          <th data-bs-toggle="tooltip" data-bs-title="Dinero ahorrado por autoconsumo">€</th>
                         </tr>
                         {% if porcentajes.0 >= porcentajes.1 and porcentajes.0 >= porcentajes.2 %}
                           <tr class="table-text-success"> {% else %}
                           <tr>{% endif %}
-                        <td>Neutral:</td>
+                        <td>Actual:</td>
                         <td>{{ item.totales.normal|floatformat:'1' }} kWh</td>
                         <td>{{ item.porcentajes.0|floatformat:'1' }}%</td>
                         <td>{{ item.precios.1|floatformat:'1' }}€</td>
