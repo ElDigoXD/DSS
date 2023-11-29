@@ -16,6 +16,10 @@
       .table-text-success > td {
           color: var(--bs-success) !important
       }
+
+      select:invalid {
+          color: var(--bs-secondary-color)
+      }
   </style>
 {% endblock style %}
 {% block body %}
@@ -25,7 +29,7 @@
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button {% if not forloop.first %} collapsed {% endif %}" type="button">
-                    <!--data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" -->
+              <!--data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" -->
               {{ item.semana }}
             </button>
           </h2>
@@ -41,18 +45,26 @@
                     {% with item.porcentajes as porcentajes %}
                       <table class="table">
                         <tr>
-                          <td >Total consumido:</td>
-                          <td data-bs-toggle="tooltip" data-bs-title="Total de kWh consumidos">{{ item.totales.total|floatformat:'1' }} kWh</td>
+                          <td>Total consumido:</td>
+                          <td data-bs-toggle="tooltip"
+                              data-bs-title="Total de kWh consumidos">{{ item.totales.total|floatformat:'1' }} kWh
+                          </td>
                           <td></td>
-                          <td  data-bs-toggle="tooltip" data-bs-title="Precio factura">{{ item.precios.0|floatformat:'1' }}€</td>
+                          <td data-bs-toggle="tooltip"
+                              data-bs-title="Precio sin ahorro ni compensacion por excedente">{{ item.precios.0|floatformat:'1' }}€
+                          </td>
                           <td></td>
                         </tr>
                         <tr>
                           <th data-bs-toggle="tooltip" data-bs-title="Producción actual y aumentada">Producción</th>
                           <th data-bs-toggle="tooltip" data-bs-title="kWh autoconsumidos">kWh</th>
-                          <th data-bs-toggle="tooltip" data-bs-title="Porcentaje del autoconsumo respecto al consumo total">%</th>
+                          <th data-bs-toggle="tooltip"
+                              data-bs-title="Porcentaje del autoconsumo respecto al consumo total">%
+                          </th>
                           <th data-bs-toggle="tooltip" data-bs-title="Dinero ahorrado por autoconsumo">€</th>
-                          <th data-bs-toggle="tooltip" data-bs-title="Dinero compensado por la venta del excedente">Excedente</th>
+                          <th data-bs-toggle="tooltip"
+                              data-bs-title="Dinero compensado por la venta del excedente">Excedente
+                          </th>
                         </tr>
 
                         <tr>
@@ -90,24 +102,29 @@
                           <td id="precio_aumentado_20">{{ item.precios.5|floatformat:'1' }}€</td>
                           <td id="precio_excedente_aumentado_20">{{ item.devolucion_excedente.4|floatformat:'1' }}€</td>
                         </tr>
-                        
+
                       </table>
                     {% endwith %}
                     <!-- Formulario del Roi -->
                     <div class="input-group mb-1">
-                      <span class="input-group-text justify-content-center" style="width: 2.5em">%</span>
-                      <select id="porcentaje" type="number" class="form-select" name="">
-                        <option value="5">2.1kW</option>
-                        <option value="10">4.2kW</option>
-                        <option value="15">6.3kW</option>
-                        <option value="20">8.4kW</option>
+                      <span class="input-group-text justify-content-center" style="width: 2.5em">kW</span>
+                      <select id="porcentaje" type="number" class="form-select" name="" required>
+                        <option value="" disabled selected hidden>Aumento de producción</option>
+                        <option value="5">2.1 kW</option>
+                        <option value="10">4.2 kW</option>
+                        <option value="15">6.3 kW</option>
+                        <option value="20">8.4 kW</option>
                       </select>
                     </div>
                     <div class="input-group mb-1">
                       <span class="input-group-text justify-content-center" style="width: 2.5em">€</span>
-                      <input type="number" class="form-control" name="" id="precio" placeholder="Precio del aumento" >
+                      <input type="number" class="form-control" name="" id="precio" placeholder="Precio del aumento">
                     </div>
-                    <button class="btn btn-primary me-2" onclick="aaa()">Calcular</button>
+                    <button class="btn btn-primary me-2"
+                            onclick="aaa()"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="Calcula el tiempo de retorno de la inversón en años">Calcular ROI
+                    </button>
                     <label id="roi" class="form-label">ROI: </label>
                   </div>
                 </div>
@@ -126,10 +143,15 @@
       function aaa() {
           // total contratado 42 kw
           function parseNumber(elemento) {
-              return Number(elemento.innerHTML.replace("%", "").replace("€", ""))
+              const num = Number(elemento.innerHTML.replace("%", "").replace("€", ""));
+              if (isNaN(num)) {
+                  throw new Error("parse")
+              }
+              return num
           }
 
           const porcentaje = document.getElementById("porcentaje")
+          if (porcentaje.value === "") return;
 
           const precio = document.getElementById("precio")
           if (precio.value === "") return
