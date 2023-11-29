@@ -5,21 +5,180 @@
 {% block title %}
   Instalación de baterías
 {% endblock %}
-
 {% block imports %}
   <!-- ChartJS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 {% endblock %}
 
+{% block style %}
+  <style>
+      .table-text-success > td {
+          color: var(--bs-success) !important
+      }
+
+      select:invalid {
+          color: var(--bs-secondary-color)
+      }
+  </style>
+{% endblock style %}
 {% block body %}
-  <div class="d-flex flex-column flex-fill justify-content-center align-items-center">
-    <img height="200" src="{% static 'gif.gif' %}"/>
-    <p>Work in progress</p>
+  <div class="d-flex flex-column flex-fill offset-xl-1 col-xl-10 col-12">
+    <div class="accordion open" id="accordionExample">
+      {% for item in acordeon %}
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button {% if not forloop.first %} collapsed {% endif %}" type="button">
+              <!--data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" -->
+              {{ item.semana }}
+            </button>
+          </h2>
+          <div id="collapse{{ forloop.counter }}"
+               class="accordion-collapse collapse {% if forloop.first %} show {% endif %}"
+               data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <div class="row">
+                <div class="col-5 d-flex align-items-center">
+                  <div class="flex-column">
+                    <h4>Análisis del aumento de capacidad de producción:</h4>
+
+                    {% with item.porcentajes as porcentajes %}
+                      <table class="table">
+                        <tr>
+                          <td>Total consumido:</td>
+                          <td data-bs-toggle="tooltip"
+                              data-bs-title="Total de kWh consumidos">{{ item.totales.total|floatformat:'1' }} kWh
+                          </td>
+                          <td></td>
+                          <td data-bs-toggle="tooltip"
+                              data-bs-title="Precio sin ahorro ni compensacion por excedente">{{ item.precios.0|floatformat:'1' }}€
+                          </td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th data-bs-toggle="tooltip" data-bs-title="Producción actual y aumentada">Producción</th>
+                          <th data-bs-toggle="tooltip" data-bs-title="kWh autoconsumidos">kWh</th>
+                          <th data-bs-toggle="tooltip"
+                              data-bs-title="Porcentaje del autoconsumo respecto al consumo total">%
+                          </th>
+                          <th data-bs-toggle="tooltip" data-bs-title="Dinero ahorrado por autoconsumo">€</th>
+                          <th data-bs-toggle="tooltip"
+                              data-bs-title="Dinero compensado por la venta del excedente">Excedente
+                          </th>
+                        </tr>
+
+                        <tr>
+                          <td>Actual:</td>
+                          <td>{{ item.totales.normal|floatformat:'1' }} kWh</td>
+                          <td>{{ item.porcentajes.0|floatformat:'1' }}%</td>
+                          <td id="precio_normal">{{ item.precios.1|floatformat:'1' }}€</td>
+                          <td id="precio_excedente_normal">{{ item.devolucion_excedente.0|floatformat:'1' }}€</td>
+                        </tr>
+                        <tr>
+                          <td>5 kWh:</td>
+                          <td>{{ item.totales.aumentado_5|floatformat:'1' }} kWh</td>
+                          <td id="">{{ item.porcentajes.1|floatformat:'1' }}%</td>
+                          <td id="precio_aumentado_5">{{ item.precios.2|floatformat:'1' }}€</td>
+                          <td id="precio_excedente_aumentado_5">{{ item.devolucion_excedente.1|floatformat:'1' }}€</td>
+                        </tr>
+                        <tr>
+                          <td>10 kWh:</td>
+                          <td>{{ item.totales.aumentado_10|floatformat:'1' }} kWh</td>
+                          <td id="">{{ item.porcentajes.2|floatformat:'1' }}%</td>
+                          <td id="precio_aumentado_10">{{ item.precios.3|floatformat:'1' }}€</td>
+                          <td id="precio_excedente_aumentado_10">{{ item.devolucion_excedente.2|floatformat:'1' }}€</td>
+                        </tr>
+                        <tr>
+                          <td>15 kWh:</td>
+                          <td>{{ item.totales.aumentado_15|floatformat:'1' }} kWh</td>
+                          <td id="">{{ item.porcentajes.3|floatformat:'1' }}%</td>
+                          <td id="precio_aumentado_15">{{ item.precios.4|floatformat:'1' }}€</td>
+                          <td id="precio_excedente_aumentado_15">{{ item.devolucion_excedente.3|floatformat:'1' }}€</td>
+                        </tr>
+                        <tr>
+                          <td>20 kWh:</td>
+                          <td>{{ item.totales.aumentado_20|floatformat:'1' }} kWh</td>
+                          <td id="">{{ item.porcentajes.4|floatformat:'1' }}%</td>
+                          <td id="precio_aumentado_20">{{ item.precios.5|floatformat:'1' }}€</td>
+                          <td id="precio_excedente_aumentado_20">{{ item.devolucion_excedente.4|floatformat:'1' }}€</td>
+                        </tr>
+
+                      </table>
+                    {% endwith %}
+                    <!-- Formulario del Roi -->
+                    <div class="input-group mb-1">
+                      <span class="input-group-text justify-content-center" style="width: 3em">kWh</span>
+                      <select id="porcentaje" type="number" class="form-select" name="" required>
+                        <option value="" disabled selected hidden>Tamaño de las baterías</option>
+                        <option value="5">5 kWh</option>
+                        <option value="10">10 kWh</option>
+                        <option value="15">15 kWh</option>
+                        <option value="20">20 kWh</option>
+                      </select>
+                    </div>
+                    <div class="input-group mb-1">
+                      <span class="input-group-text justify-content-center" style="width: 3em">€</span>
+                      <!--
+                      https://www.monsolar.com/bateria-litio-huawei-5kwh.html
+                      3.1€ - 5
+                      5.4k - 10
+                      7.6k - 15
+                      -->
+                      <input type="number"
+                             class="form-control"
+                             name=""
+                             id="precio"
+                             placeholder="Precio de las baterías"/>
+                    </div>
+                    <button class="btn btn-primary me-2"
+                            onclick="aaa()"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="Calcula el tiempo de retorno de la inversón en años">
+                      Calcular ROI
+                    </button>
+                    <label id="roi" class="form-label">ROI: </label>
+                  </div>
+                </div>
+                <div class="col-7">
+                  {% include 'componentes/chart.html' with chart=item.chart %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
   </div>
 
   <script>
-    
-      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      function aaa() {
+          // total contratado 42 kw
+          function parseNumber(elemento) {
+              const num = Number(elemento.innerHTML.replace("%", "").replace("€", ""));
+              if (isNaN(num)) {
+                  throw new Error("parse")
+              }
+              return num
+          }
+
+          const porcentaje = document.getElementById("porcentaje")
+          if (porcentaje.value === "") return;
+
+          const precio = document.getElementById("precio")
+          if (precio.value === "") return
+          const precio_normal = document.getElementById("precio_normal")
+          const precio_excedente_normal = document.getElementById("precio_excedente_normal")
+          const precio_aumentado = document.getElementById("precio_aumentado_" + porcentaje.value)
+          const precio_excedente_aumentado = document.getElementById("precio_excedente_aumentado_" + porcentaje.value)
+          const roi = document.getElementById("roi")
+
+          const n_precio_normal = parseNumber(precio_normal)
+          const n_precio_excedente_normal = parseNumber(precio_excedente_normal)
+          const n_precio_aumentado = parseNumber(precio_aumentado)
+          const n_precio_excedente_aumentado = parseNumber(precio_excedente_aumentado)
+
+
+          const diferencia = n_precio_aumentado - n_precio_normal + n_precio_excedente_aumentado - n_precio_excedente_normal
+          roi.innerHTML = "ROI: " + (precio.value / diferencia / 12).toFixed(1) + " Años"
+      }
   </script>
 {% endblock %}
