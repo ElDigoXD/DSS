@@ -46,6 +46,7 @@ class Chart:
     x_labels: str
     datasets: list[Dataset]
     scales: list[Scale]
+    name: str
 
     def __init__(self,
                  canvas_id: str,
@@ -53,7 +54,8 @@ class Chart:
                  datasets: list[Dataset],
                  scales: list[Scale],
                  type=Type.LINE,
-                 legend=False
+                 legend=False,
+                 name=""
                  ):
         self.canvas_id = canvas_id
         self.x_labels = x_labels
@@ -61,6 +63,7 @@ class Chart:
         self.scales = scales
         self.type = "line" if type == Type.LINE else "bar"
         self.legend = legend
+        self.name = name
 
 # {{{# chart: type, canvas_id, x_labels, datasets #}}}
 # {{{# datasets: [background_color, bordercolor, data, y_axis_id] #}}}

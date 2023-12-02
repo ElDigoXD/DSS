@@ -8,19 +8,20 @@
 {% block imports %}
   <!-- ChartJS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-  {% comment %}
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.11.2/cdn/components/split-panel/split-panel.js"></script>
-  {% endcomment %}
 {% endblock %}
 
 {% block body %}
-  <h1 class="display-2"
-      style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; text-align: center;">Datos de {{ vecino.nombre }}</h1>
+  <div class="offset-xl-1 col-xl-10 col-12">
+    <h1 class="display-3" style="text-align: center;">Datos de {{ vecino.nombre }}</h1>
 
-  <h1>Gráficos</h1>
-
-  {% for chart in charts %}
-    <h2>{{ chart.canvas_id }}</h2>
-    {% include 'componentes/chart.html' %} {% comment %}with var=val only{% endcomment %}
-  {% endfor %}
+    <h1 class="display-5 ms-4">Gráficos</h1>
+    <div class="">
+      {% for chart in charts %}
+        <div class="flex-grow-0">
+          <h2 class="display-6 ms-4">{{ chart.name }}</h2>
+          {% include 'componentes/chart.html' %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
 {% endblock %}

@@ -2,13 +2,22 @@
 {% block title %}
   Seleccionar vecino
 {% endblock %}
+
+{% block style %}
+  <style>
+      select:invalid {
+          color: var(--bs-secondary-color)
+      }
+  </style>
+{% endblock %}
+
 {% block body %}
-  <h1 style="display: flex; justify-content: center; align-items: center; height: 10vh;">Administrador de red electrica de la comunidad</h1>
+  <h1 style="display: flex; justify-content: center; align-items: center; height: 10vh;">Administrador de la comunidad</h1>
   <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
     <div class="col-md-4">
       <form method="get" action="{% url 'datos_vecino' %}">
         <select class="form-select" name="vecino_id" required>
-          <option value="" selected>Seleccione el vecino</option>
+          <option value="" disabled selected hidden>Seleccione el vecino</option>
           {% for vecino in vecinos %}
             <option value="{{ vecino.id }}">{{ vecino.nombre }}</option>
           {% endfor %}

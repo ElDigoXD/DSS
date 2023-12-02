@@ -38,7 +38,7 @@
                data-bs-parent="#accordionExample">
             <div class="accordion-body">
               <div class="row">
-                <div class="col-5 d-flex align-items-center">
+                <div class="col-12 d-flex align-items-center">
                   <div class="flex-column">
                     <h4>Análisis del aumento de capacidad de producción:</h4>
 
@@ -123,12 +123,12 @@
                     <button class="btn btn-primary me-2"
                             onclick="aaa()"
                             data-bs-toggle="tooltip"
-                            data-bs-title="Calcula el tiempo de retorno de la inversón en años">Calcular ROI
+                            data-bs-title="Calcula el tiempo de retorno de la inversión en años">Calcular ROI
                     </button>
                     <label id="roi" class="form-label">ROI: </label>
                   </div>
                 </div>
-                <div class="col-7">
+                <div class="col-5 visually-hidden">
                   {% include 'componentes/chart.html' with chart=item.chart %}
                 </div>
               </div>

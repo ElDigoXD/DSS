@@ -10,6 +10,7 @@ from dss.models.consumo import Consumo
 from dss.models.precio_venta import Precio_venta
 from dss.models.produccion import Produccion
 from dss.models.vecino import Vecino
+from dss.utils import float_round
 
 EFICIENCIA_ROTACION = 0.95
 
@@ -130,12 +131,18 @@ def orientacion_placas_vecino(request: HttpRequest, vecino_id) -> HttpResponse:
                     semana,
                     str([i for i in range(24)]),
                     [
-                        Dataset(str([c for c in ahorro_normal]), label="Ahorro normal",
-                                background_color="rgba(0, 168, 232, 0.5)"),
-                        Dataset(str([p for p in ahorro_mañana]), label="Ahorro mañana",
-                                background_color="rgba(242, 100, 25, 1)"),
-                        Dataset(str([p for p in ahorro_tarde]), label="Ahorro tarde",
-                                background_color="rgba(246, 174, 45, 1)"),
+                        Dataset(
+                            label="Ahorro normal (kW)",
+                            data=str([float_round(a / 1000) for a in ahorro_normal]),
+                            background_color="rgba(0, 168, 232, 0.5)"),
+                        Dataset(
+                            label="Ahorro mañana (kW)",
+                            data=str([float_round(a / 1000) for a in ahorro_mañana]),
+                            background_color="rgba(242, 100, 25, 1)"),
+                        Dataset(
+                            label="Ahorro tarde (kW)",
+                            data=str([float_round(a / 1000) for a in ahorro_tarde]),
+                            background_color="rgba(246, 174, 45, 1)"),
                     ],
                     [Scale()],
                     Type.BAR,

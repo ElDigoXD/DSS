@@ -13,3 +13,7 @@ def try_int(x: str) -> int | None:
         return int(x)
     except:
         return None
+
+
+def float_round(num: float) -> float:
+    return float("{:.2f}".format(num))

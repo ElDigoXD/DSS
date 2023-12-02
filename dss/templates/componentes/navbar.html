@@ -26,9 +26,6 @@
         <li class="nav-item">
           <a class="nav-link" href="/datos">Datos</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link disabled">Disabled</a>
-        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Decisiones</a>
           <ul class="dropdown-menu shadow">
@@ -36,7 +33,7 @@
               <a class="dropdown-item " href="{% url "orientacion_placas" %}">Orientación placas</a>
             </li>
             <li>
-              <a class="dropdown-item " href="{% url "aumento_participacion" %}">Aumento participación</a>
+              <a class="dropdown-item " href="{% url "aumento_participacion" %}">Aumento producción</a>
             </li>
             <li>
               <a class="dropdown-item " href="{% url "baterias" %}">Instalación de baterías</a>
@@ -44,7 +41,7 @@
           </ul>
         </li>
       </ul>
-      <div class="nav-item dropdown me-2">
+      <div class="nav-item dropdown me-2 visually-hidden">
         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">pepe</a>
         <ul class="dropdown-menu shadow">
           <li><a class="dropdown-item" href="#">Paco</a></li>
@@ -57,7 +54,7 @@
         </ul>
       </div>
       <form role="search">
-        <input class="form-control" type="search" placeholder="Search"/>
+        <input class="form-control visually-hidden" type="search" placeholder="Search"/>
       </form>
     </div>
   </div>

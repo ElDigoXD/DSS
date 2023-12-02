@@ -37,20 +37,20 @@
                data-bs-parent="#accordionExample">
             <div class="accordion-body">
               <div class="row">
-                <div class="col-5 d-flex align-items-center">
+                <div class="col-12 d-flex align-items-center">
                   <div class="flex-column">
-                    <h4>Análisis del aumento de capacidad de producción:</h4>
+                    <h4>Análisis de instalación de baterías:</h4>
 
                     {% with item.porcentajes as porcentajes %}
                       <table class="table">
                         <tr>
                           <td>Total consumido:</td>
                           <td data-bs-toggle="tooltip"
-                              data-bs-title="Total de kWh consumidos">{{ item.totales.total|floatformat:'1' }} kWh
+                              data-bs-title="Total de kWh consumidos">{{ item.total.kwh|floatformat:'1' }} kWh
                           </td>
                           <td></td>
                           <td data-bs-toggle="tooltip"
-                              data-bs-title="Precio sin ahorro ni compensacion por excedente">{{ item.precios.0|floatformat:'1' }}€
+                              data-bs-title="Precio sin ahorro ni compensacion por excedente">{{ item.total.precio|floatformat:'1' }}€
                           </td>
                           <td></td>
                         </tr>
@@ -66,41 +66,51 @@
                           </th>
                         </tr>
 
-                        <tr>
-                          <td>Actual:</td>
-                          <td>{{ item.totales.normal|floatformat:'1' }} kWh</td>
-                          <td>{{ item.porcentajes.0|floatformat:'1' }}%</td>
-                          <td id="precio_normal">{{ item.precios.1|floatformat:'1' }}€</td>
-                          <td id="precio_excedente_normal">{{ item.devolucion_excedente.0|floatformat:'1' }}€</td>
-                        </tr>
-                        <tr>
-                          <td>5 kWh:</td>
-                          <td>{{ item.totales.aumentado_5|floatformat:'1' }} kWh</td>
-                          <td id="">{{ item.porcentajes.1|floatformat:'1' }}%</td>
-                          <td id="precio_aumentado_5">{{ item.precios.2|floatformat:'1' }}€</td>
-                          <td id="precio_excedente_aumentado_5">{{ item.devolucion_excedente.1|floatformat:'1' }}€</td>
-                        </tr>
-                        <tr>
-                          <td>10 kWh:</td>
-                          <td>{{ item.totales.aumentado_10|floatformat:'1' }} kWh</td>
-                          <td id="">{{ item.porcentajes.2|floatformat:'1' }}%</td>
-                          <td id="precio_aumentado_10">{{ item.precios.3|floatformat:'1' }}€</td>
-                          <td id="precio_excedente_aumentado_10">{{ item.devolucion_excedente.2|floatformat:'1' }}€</td>
-                        </tr>
-                        <tr>
-                          <td>15 kWh:</td>
-                          <td>{{ item.totales.aumentado_15|floatformat:'1' }} kWh</td>
-                          <td id="">{{ item.porcentajes.3|floatformat:'1' }}%</td>
-                          <td id="precio_aumentado_15">{{ item.precios.4|floatformat:'1' }}€</td>
-                          <td id="precio_excedente_aumentado_15">{{ item.devolucion_excedente.3|floatformat:'1' }}€</td>
-                        </tr>
-                        <tr>
-                          <td>20 kWh:</td>
-                          <td>{{ item.totales.aumentado_20|floatformat:'1' }} kWh</td>
-                          <td id="">{{ item.porcentajes.4|floatformat:'1' }}%</td>
-                          <td id="precio_aumentado_20">{{ item.precios.5|floatformat:'1' }}€</td>
-                          <td id="precio_excedente_aumentado_20">{{ item.devolucion_excedente.4|floatformat:'1' }}€</td>
-                        </tr>
+                        {% with item.actual as item %}
+                          <tr>
+                            <td>Actual:</td>
+                            <td>{{ item.kwh|floatformat:'1' }} kWh</td>
+                            <td>{{ item.porcentaje|floatformat:'1' }}%</td>
+                            <td id="precio_actual">{{ item.dinero_ahorrado|floatformat:'1' }}€</td>
+                            <td id="precio_excedente_actual">{{ item.dinero_excedente|floatformat:'1' }}€</td>
+                          </tr>
+                        {% endwith %}
+                        {% with item.aumentado_5 as item %}
+                          <tr>
+                            <td>5 kWh:</td>
+                            <td>{{ item.kwh|floatformat:'1' }} kWh</td>
+                            <td>{{ item.porcentaje|floatformat:'1' }}%</td>
+                            <td id="precio_5">{{ item.dinero_ahorrado|floatformat:'1' }}€</td>
+                            <td id="precio_excedente_5">{{ item.dinero_excedente|floatformat:'1' }}€</td>
+                          </tr>
+                        {% endwith %}
+                        {% with item.aumentado_10 as item %}
+                          <tr>
+                            <td>10 kWh:</td>
+                            <td>{{ item.kwh|floatformat:'1' }} kWh</td>
+                            <td>{{ item.porcentaje|floatformat:'1' }}%</td>
+                            <td id="precio_10">{{ item.dinero_ahorrado|floatformat:'1' }}€</td>
+                            <td id="precio_excedente_10">{{ item.dinero_excedente|floatformat:'1' }}€</td>
+                          </tr>
+                        {% endwith %}
+                        {% with item.aumentado_15 as item %}
+                          <tr>
+                            <td>15 kWh:</td>
+                            <td>{{ item.kwh|floatformat:'1' }} kWh</td>
+                            <td>{{ item.porcentaje|floatformat:'1' }}%</td>
+                            <td id="precio_15">{{ item.dinero_ahorrado|floatformat:'1' }}€</td>
+                            <td id="precio_excedente_15">{{ item.dinero_excedente|floatformat:'1' }}€</td>
+                          </tr>
+                        {% endwith %}
+                        {% with item.aumentado_20 as item %}
+                          <tr>
+                            <td>20 kWh:</td>
+                            <td>{{ item.kwh|floatformat:'1' }} kWh</td>
+                            <td>{{ item.porcentaje|floatformat:'1' }}%</td>
+                            <td id="precio_20">{{ item.dinero_ahorrado|floatformat:'1' }}€</td>
+                            <td id="precio_excedente_20">{{ item.dinero_excedente|floatformat:'1' }}€</td>
+                          </tr>
+                        {% endwith %}
 
                       </table>
                     {% endwith %}
@@ -132,13 +142,13 @@
                     <button class="btn btn-primary me-2"
                             onclick="aaa()"
                             data-bs-toggle="tooltip"
-                            data-bs-title="Calcula el tiempo de retorno de la inversón en años">
+                            data-bs-title="Calcula el tiempo de retorno de la inversión en años">
                       Calcular ROI
                     </button>
                     <label id="roi" class="form-label">ROI: </label>
                   </div>
                 </div>
-                <div class="col-7">
+                <div class="col-5 visually-hidden">
                   {% include 'componentes/chart.html' with chart=item.chart %}
                 </div>
               </div>
