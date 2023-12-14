@@ -83,6 +83,7 @@ def info_vecino(request: HttpRequest) -> HttpResponse:
     lista_ahorro = [(produccion[i].kw_media_producidos * vecino.porcentaje) - consumo[i].kw_media_consumidos for i in range(24)]
     context = {
         "vecino": vecino,
+        "fecha": fecha,
         "charts": [
             Chart(
                 name="Produccion y consumo",

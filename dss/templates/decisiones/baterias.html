@@ -36,13 +36,13 @@
                class="accordion-collapse collapse {% if forloop.first %} show {% endif %}"
                data-bs-parent="#accordionExample">
             <div class="accordion-body">
-              <div class="row">
-                <div class="col-12 d-flex align-items-center">
+              <div class="row d-flex align-items-center">
+                <div class="col-6 offset-3">
                   <div class="flex-column">
                     <h4>Análisis de instalación de baterías:</h4>
 
                     {% with item.porcentajes as porcentajes %}
-                      <table class="table">
+                      <table class="table"> 
                         <tr>
                           <td>Total consumido:</td>
                           <td data-bs-toggle="tooltip"
@@ -148,9 +148,6 @@
                     <label id="roi" class="form-label">ROI: </label>
                   </div>
                 </div>
-                <div class="col-5 visually-hidden">
-                  {% include 'componentes/chart.html' with chart=item.chart %}
-                </div>
               </div>
             </div>
           </div>
@@ -175,10 +172,10 @@
 
           const precio = document.getElementById("precio")
           if (precio.value === "") return
-          const precio_normal = document.getElementById("precio_normal")
-          const precio_excedente_normal = document.getElementById("precio_excedente_normal")
-          const precio_aumentado = document.getElementById("precio_aumentado_" + porcentaje.value)
-          const precio_excedente_aumentado = document.getElementById("precio_excedente_aumentado_" + porcentaje.value)
+          const precio_normal = document.getElementById("precio_actual")
+          const precio_excedente_normal = document.getElementById("precio_excedente_actual")
+          const precio_aumentado = document.getElementById("precio_" + porcentaje.value)
+          const precio_excedente_aumentado = document.getElementById("precio_excedente_" + porcentaje.value)
           const roi = document.getElementById("roi")
 
           const n_precio_normal = parseNumber(precio_normal)

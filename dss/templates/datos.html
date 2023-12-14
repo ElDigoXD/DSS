@@ -12,12 +12,12 @@
 
 {% block body %}
   <div class="offset-xl-1 col-xl-10 col-12">
-    <h1 class="display-3" style="text-align: center;">Datos de {{ vecino.nombre }}</h1>
+    <h1 class="display-3" style="text-align: center;">Datos de {{ vecino.nombre }} - {{ fecha|date:"d/m/Y" }}</h1>
 
     <h1 class="display-5 ms-4">Gráficos</h1>
-    <div class="">
+    <div class="row">
       {% for chart in charts %}
-        <div class="flex-grow-0">
+        <div class="flex-grow-0 col-xl-6 col-12">
           <h2 class="display-6 ms-4">{{ chart.name }}</h2>
           {% include 'componentes/chart.html' %}
         </div>

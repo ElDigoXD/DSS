@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-sm bg-body-tertiary rounded m-2">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">Solar DSS</a>
+    <a class="navbar-brand" href="/">🔆 Solar DSS</a>
     <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"><span
         class="navbar-toggler-icon"></span></button>
 
@@ -15,12 +15,15 @@
             <li>
               <a class="dropdown-item" href="/admin/login/?next=/admin/">Django admin</a>
             </li>
+            {%comment%} 
             <li>
               <hr class="dropdown-divider"/>
             </li>
+            
             <li>
               <a class="dropdown-item" href="/test">Test</a>
             </li>
+            {% endcomment %}
           </ul>
         </li>
         <li class="nav-item">
@@ -41,6 +44,7 @@
           </ul>
         </li>
       </ul>
+      {%comment%}
       <div class="nav-item dropdown me-2 visually-hidden">
         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">pepe</a>
         <ul class="dropdown-menu shadow">
@@ -56,6 +60,7 @@
       <form role="search">
         <input class="form-control visually-hidden" type="search" placeholder="Search"/>
       </form>
+      {%endcomment%}
     </div>
   </div>
 </nav>
